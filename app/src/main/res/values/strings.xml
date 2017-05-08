@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">WeChatAssistant</string>
+    <string name="accessibility_description">能够帮助你自动抢红包,自动给设定的朋友点赞</string>
+    <string name="test_service_label">微信助手</string>
+</resources>
