@@ -2,7 +2,6 @@ package business_android_client.wechatassistant.base;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
@@ -15,17 +14,17 @@ import business_android_client.wechatassistant.presenter.ShowHeartsPresenter;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
-    public  Context ctx;
+    public  Context context;
     public RedPacketPresenter redPacket;
     public ShowHeartsPresenter showHearts;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
+    public void onCreate( Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(getLayoutId());
-        ctx = this;
-        redPacket = new RedPacketPresenter(ctx);
-        showHearts = new ShowHeartsPresenter(ctx);
+        context = this;
+        redPacket = new RedPacketPresenter(context);
+        showHearts = new ShowHeartsPresenter(context);
         initView();
         initData();
     }
