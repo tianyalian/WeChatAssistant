@@ -1,6 +1,8 @@
 package business_android_client.wechatassistant.presenter;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 
 /**
  * Created by seeker on 2017/5/8.
@@ -14,5 +16,18 @@ public class BasePresenter {
 
     public BasePresenter(Context ctx) {
         this.ctx = ctx;
+    }
+
+    /**
+     * 打开微信
+     */
+    public void openWechat(){
+        Intent intent = new Intent();
+        ComponentName cmp = new ComponentName(" com.tencent.mm ","com.tencent.mm.ui.LauncherUI");
+        intent.setAction(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setComponent(cmp);
+        ctx.startActivity(intent);
     }
 }
