@@ -2,8 +2,7 @@ package business_android_client.wechatassistant.presenter;
 
 import android.app.AlertDialog;
 import android.content.Context;
-
-import java.util.List;
+import android.content.DialogInterface;
 
 /**
  * Created by seeker on 2017/5/8.
@@ -11,12 +10,39 @@ import java.util.List;
  */
 
 public class ShowHeartsPresenter extends BasePresenter {
+
+    private AlertDialog.Builder builder;
+
     public ShowHeartsPresenter(Context ctx) {
         super(ctx);
     }
 
-    public void  showFriendsListDialog(List<String> list){
-        AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+    public void  showFriendsListDialog(String[] friends,boolean[] isckecked){
+
+        if (builder==null) {
+            builder = new AlertDialog.Builder(ctx);
+            builder.setTitle("最多选10位好友");
+
+            builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            });
+            builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            });
+        }
+        builder.setMultiChoiceItems(friends, isckecked, new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i, boolean b) {
+
+            }
+        });
+        builder.show();
 
     }
 }
