@@ -15,6 +15,5 @@
      notificationTimeout:响应时间
      description：辅助服务的描述信息。
      packageNames:指定响应哪个应用的事件,不填则是所有的应用。(腾讯微信包名：com.tencent.mm)
-
      google 官网的属性描述:https://developer.android.google.cn/reference/android/accessibilityservice/AccessibilityServiceInfo.html#eventTypes
      -->
