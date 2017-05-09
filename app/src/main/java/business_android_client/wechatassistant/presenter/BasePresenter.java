@@ -36,7 +36,7 @@ public class BasePresenter {
     }
 
     /**
-     * 获取微信朋友列表
+     * 获取微信朋友列表  最后在做
      * @return
      */
     public List<String> getFriendsList(){
@@ -47,22 +47,33 @@ public class BasePresenter {
     }
 
     /**
-     * 主页跳转到朋友圈,其他页无效
+     * 点击文字
      */
-    public void gotoFriendsCircle( AccessibilityNodeInfo nodeInfo){
+    public void clickText(AccessibilityNodeInfo nodeInfo,String text){
         if (nodeInfo == null) {
             Log.d(Constants.TAG, "rootWindow为空");
             return;
         }
-        List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByViewId(Constants.discover_id);
+//        List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByViewId(Constants.discover_id);
+        List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText(text);
         for (AccessibilityNodeInfo info:list) {
-            info.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+            if (info.isCheckable()) {
+                info.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+            } else {
+                AccessibilityNodeInfo parent = info.getParent();
+                if (parent.isClickable()) {
+                    parent.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                } else {
+                    parent.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                }
+            }
         }
     }
 
 
    public void  startMainActivity(){
         Intent intent = new Intent(ctx,MainActivity.class);
+         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         ctx.startActivity(intent);
     }
 

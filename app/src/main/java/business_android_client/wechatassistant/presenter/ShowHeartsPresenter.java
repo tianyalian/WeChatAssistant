@@ -17,6 +17,11 @@ public class ShowHeartsPresenter extends BasePresenter {
         super(ctx);
     }
 
+    /**
+     * 弹出显示朋友列表的对话框   此功能放最后
+     * @param friends
+     * @param isckecked
+     */
     public void  showFriendsListDialog(String[] friends,boolean[] isckecked){
 
         if (builder==null) {

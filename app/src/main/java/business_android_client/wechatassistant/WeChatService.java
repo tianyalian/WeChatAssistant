@@ -25,7 +25,7 @@ public class WeChatService extends AccessibilityService {
     @Override
     public void onAccessibilityEvent(AccessibilityEvent accessibilityEvent) {
         if (Constants.wechatPackageName.equals(accessibilityEvent.getPackageName())) {
-            showHearts.gotoFriendsCircle(getRootInActiveWindow());
+            showHearts.clickText(getRootInActiveWindow(),Constants.discover_text);
         }
     }
 
@@ -46,7 +46,8 @@ public class WeChatService extends AccessibilityService {
         redPacket = new RedPacketPresenter(WeChatService.this);
         showHearts = new ShowHeartsPresenter(WeChatService.this);
         Toast.makeText(WeChatService.this, "服务启动!", Toast.LENGTH_SHORT).show();
-        showHearts.startMainActivity();
+//        showHearts.startMainActivity();
+        showHearts.openWechat();
     }
 
 
