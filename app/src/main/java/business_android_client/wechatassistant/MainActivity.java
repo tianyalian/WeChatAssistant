@@ -1,15 +1,20 @@
 package business_android_client.wechatassistant;
 
+import android.net.Uri;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.Button;
 
 import business_android_client.wechatassistant.base.BaseActivity;
+import business_android_client.wechatassistant.utils.Constants;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     /**
      * 增加toolbar  修改baseactivity
      */
-    private Toolbar toolbar       ;
+    private Toolbar toolbar;
+    private Button button;
 
     @Override
     protected int getLayoutId() {
@@ -19,12 +24,18 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-//        showHearts.openWechat();
+        button = (Button) findViewById(R.id.button);
+        button.setOnClickListener(this);
     }
 
     @Override
     protected void initData() {
 
+    }
 
+    @Override
+    public void onClick(View view) {
+//        showHearts.openWechat();
+        getContentResolver().notifyChange(Uri.parse(Constants.notify), null);
     }
 }

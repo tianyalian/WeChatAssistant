@@ -6,6 +6,7 @@ import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Handler;
 import android.view.accessibility.AccessibilityEvent;
+import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
 
 import business_android_client.wechatassistant.presenter.RedPacketPresenter;
@@ -25,9 +26,12 @@ public class WeChatService extends AccessibilityService {
         @Override
         public void onChange(boolean selfChange, Uri uri) {
             super.onChange(selfChange, uri);
-            isNeedPrise = false;
+            if (uri.toString().contains("click")) {
+                isNeedPrise = false;
+            }
         }
     };
+    private AccessibilityNodeInfo rootInActiveWindow;
 
 
     /**
@@ -36,9 +40,22 @@ public class WeChatService extends AccessibilityService {
      */
     @Override
     public void onAccessibilityEvent(AccessibilityEvent accessibilityEvent) {
-        if (Constants.wechatPackageName.equals(accessibilityEvent.getPackageName()) && isNeedPrise) {
-            showHearts.gotoContacts(getRootInActiveWindow());
+        if (isNeedPrise) {
+                rootInActiveWindow = getRootInActiveWindow();
+            if (rootInActiveWindow.getContentDescription().toString().contains("详细资料")) {//当前详细资料页面
+                showHearts.gotoPhoto(rootInActiveWindow);//跳转到个人相册
+            } else  if (rootInActiveWindow.getContentDescription().toString().contains("二姨夫")){//相册列表
+//                rootInActiveWindow.
+            }
+
+//            if (isFirst) {
+//                isFirst = false;
+//                showHearts.gotoContacts(rootInActiveWindow);
+//            }
+//            showHearts.priseAtNameInContacts(getRootInActiveWindow());
+//            getContentResolver().notifyChange(Uri.parse(Constants.uri_scroll), null);
         }
+//        getContentResolver().notifyChange(Uri.parse(Constants.uri_click), null);
     }
 
     /**
@@ -46,7 +63,7 @@ public class WeChatService extends AccessibilityService {
      */
     @Override
     public void onInterrupt() {
-
+        Toast.makeText(WeChatService.this, "谁把我干掉了!", Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -60,7 +77,7 @@ public class WeChatService extends AccessibilityService {
         Toast.makeText(WeChatService.this, "服务启动!", Toast.LENGTH_SHORT).show();
 //        showHearts.startMainActivity();
         showHearts.openWechat();
-        getContentResolver().registerContentObserver(Uri.parse(Constants.uri),true, observer);
+        getContentResolver().registerContentObserver(Uri.parse(Constants.notify),true, observer);
     }
 
 

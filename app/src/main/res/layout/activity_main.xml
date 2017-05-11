@@ -13,7 +13,7 @@
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="添加点赞名单"
+        android:text="打开微信"
         />
 
 </RelativeLayout>

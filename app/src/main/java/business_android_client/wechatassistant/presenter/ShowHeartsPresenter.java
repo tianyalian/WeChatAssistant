@@ -60,13 +60,16 @@ public boolean isFirst=true;
     //进入联系人界面
     public  void gotoContacts(AccessibilityNodeInfo info){//Constants.new_friends
         if (isFirst) {
-            clickText(info, Constants.contacts,true);
-            scrollscreen(info);
+            clickText(info, Constants.contacts,false);
+//            scrollscreen(info,"");
             isFirst = false;
         }
     }
 
     public void priseAtNameInContacts(AccessibilityNodeInfo info){
-        scrollAndClick("二姨夫",500,info,true);
+        scrollAndClick("二姨夫",800,info,true,"新的朋友");
+        sendNotify(true, Constants.uri_scroll);
     }
+
+
 }
