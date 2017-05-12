@@ -183,4 +183,21 @@ public class BasePresenter {
         clickText(nodeInfo, Constants.photo, true);
     }
 
+    /**
+     * 查找当前节点下可以滚动的节点
+     * @param nodeInfo
+     * @return List<AccessibilityNodeInfo>
+     */
+    public List<AccessibilityNodeInfo> getScrollableChildren(AccessibilityNodeInfo nodeInfo) {
+        int childCount = nodeInfo.getChildCount();
+        List<AccessibilityNodeInfo> list = new ArrayList<>();
+        AccessibilityNodeInfo scrollNode ;
+        for (int i=0;i< childCount;i++) {
+            AccessibilityNodeInfo child = nodeInfo.getChild(i);
+            if (child.isScrollable()) {
+                list.add(child);
+            }
+        }
+        return list;
+    }
 }
