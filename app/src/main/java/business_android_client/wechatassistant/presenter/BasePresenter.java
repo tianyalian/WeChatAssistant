@@ -180,22 +180,48 @@ public class BasePresenter {
      * 跳转到个人相册
      */
     public void gotoPhoto(AccessibilityNodeInfo nodeInfo){
-        clickText(nodeInfo, Constants.photo, true);
+//        clickText(nodeInfo, Constants.photo, true);
+        List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText(Constants.photo);
+        if (list != null && list.size() > 0) {
+            AccessibilityNodeInfo accessibilityNodeInfo = list.get(0);
+//            accessibilityNodeInfo.setClickable(true);
+            accessibilityNodeInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+        }
     }
 
     /**
      * 查找当前节点下可以滚动的节点
      * @param nodeInfo
+     * @param onlyListView 是否只要listview
      * @return List<AccessibilityNodeInfo>
      */
-    public List<AccessibilityNodeInfo> getScrollableChildren(AccessibilityNodeInfo nodeInfo) {
+    public List<AccessibilityNodeInfo> getScrollableChildren(AccessibilityNodeInfo nodeInfo,boolean onlyListView) {
         int childCount = nodeInfo.getChildCount();
-        List<AccessibilityNodeInfo> list = new ArrayList<>();
-        AccessibilityNodeInfo scrollNode ;
+        List<AccessibilityNodeInfo> scrollList = new ArrayList<>();
+        List<AccessibilityNodeInfo> listview = new ArrayList<>();
         for (int i=0;i< childCount;i++) {
             AccessibilityNodeInfo child = nodeInfo.getChild(i);
-            if (child.isScrollable()) {
-                list.add(child);
+            if (child.isScrollable() ) {
+                if (onlyListView && child.getClassName().toString().contains("ListView")) {
+                listview.add(child);
+            } else {
+                scrollList.add(child);
+            }
+        }
+        }
+        return onlyListView?listview:scrollList;
+    }
+
+    /**
+     * 获取节点下的listView
+     * @param listScroll 可以滚动的控件
+     * @return
+     */
+    public List<AccessibilityNodeInfo> getListViewFromScrollable(List<AccessibilityNodeInfo> listScroll) {
+        List<AccessibilityNodeInfo> list = new ArrayList<>();
+        for (AccessibilityNodeInfo nodeInfo:listScroll) {
+            if (nodeInfo.getClassName().toString().contains("ListView")) {
+                list.add(nodeInfo);
             }
         }
         return list;
