@@ -1,5 +1,6 @@
 package business_android_client.wechatassistant.presenter;
 
+import android.accessibilityservice.AccessibilityService;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -68,8 +69,8 @@ public boolean isFirst=true;
     }
 
     public void priseAtNameInContacts(AccessibilityNodeInfo info){
-        scrollAndClick(Constants.person,800,info,true,Constants.new_friends);
-        sendNotify(true, Constants.uri_scroll);
+        scrollAndClick(Constants.person,800,info,false,Constants.new_friends);
+        sendNotify(false, Constants.uri_scroll);
     }
 
     /**
@@ -95,4 +96,44 @@ public boolean isFirst=true;
     public void clickPraise(AccessibilityNodeInfo rootInActiveWindow) {
         clickText(rootInActiveWindow, Constants.praise, true);
     }
+    public boolean  isClickedPraise=false;
+
+    /**
+     * 从通讯录界面开始,到朋友相册页面,给第一条点赞
+     * @param rootInActiveWindow
+     */
+    public void praiseOne( AccessibilityNodeInfo rootInActiveWindow){
+        if (rootInActiveWindow != null && !isClickedPraise) {
+
+//            if (rootInActiveWindow.findAccessibilityNodeInfosByText(Constants.new_friends) != null &&
+//                    rootInActiveWindow.findAccessibilityNodeInfosByText(Constants.new_friends).size() > 0) {//当前为通讯录界面
+//                isContactsPage = true;
+//                priseAtNameInContacts(rootInActiveWindow);
+//            }
+            if (rootInActiveWindow.getChildCount()==8 && rootInActiveWindow.getChild(0).getChild(2).isVisibleToUser()){//当前为通讯录界面
+                priseAtNameInContacts(rootInActiveWindow);
+            }else if (rootInActiveWindow.getContentDescription().toString().contains(Constants.details)) {//当前详细资料页面
+                gotoPhoto(rootInActiveWindow);//跳转到个人相册
+            } else if (rootInActiveWindow.getContentDescription().toString().contains(Constants.person)) {//相册列表
+                List<AccessibilityNodeInfo> scrollableChildren = getScrollableChildren(rootInActiveWindow, true);
+                clickFirstPhoto(scrollableChildren);
+            } else if (rootInActiveWindow.findAccessibilityNodeInfosByText(Constants.comment) != null &&
+                    rootInActiveWindow.findAccessibilityNodeInfosByText(Constants.comment).size() > 0) {//相册详情页
+                clickPraise(rootInActiveWindow);
+                rootInActiveWindow.performAction(AccessibilityService.GLOBAL_ACTION_BACK);
+                isClickedPraise = true;
+            } else if (Constants.detailPage.equals(rootInActiveWindow.getContentDescription().toString())){//如果是朋友圈音乐
+                isClickedPraise = true;
+                rootInActiveWindow.performAction(AccessibilityService.GLOBAL_ACTION_BACK);
+            }
+//            else {
+//                rootInActiveWindow.performAction(AccessibilityService.GLOBAL_ACTION_POWER_DIALOG);
+//                rootInActiveWindow.performAction(AccessibilityService.GLOBAL_ACTION_BACK);
+//            }
+//            else if (isContactsPage) {
+//                priseAtNameInContacts(rootInActiveWindow);
+//            }
+        }
+    }
+
 }

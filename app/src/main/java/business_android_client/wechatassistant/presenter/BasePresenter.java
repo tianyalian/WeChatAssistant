@@ -153,7 +153,7 @@ public class BasePresenter {
 //        handler.postDelayed(runnable, frequency);
         bean = new PraiseBean(text, frequency, nodeInfo, isNeedNotify, keywords);
 //        handler.sendEmptyMessageDelayed(0,frequency);
-        sendNotify(true, Constants.uri_scroll);
+//        sendNotify(true, Constants.uri_scroll);
     }
 
 

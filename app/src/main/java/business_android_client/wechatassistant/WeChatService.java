@@ -9,8 +9,6 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
 
-import java.util.List;
-
 import business_android_client.wechatassistant.presenter.RedPacketPresenter;
 import business_android_client.wechatassistant.presenter.ShowHeartsPresenter;
 import business_android_client.wechatassistant.utils.Constants;
@@ -49,29 +47,9 @@ public class WeChatService extends AccessibilityService {
             isFirst = false;
             showHearts.gotoContacts(rootInActiveWindow);//到联系人列表
         }
-        if (rootInActiveWindow != null && !isClickedPraise) {
+//        showHearts.praiseOne(rootInActiveWindow);//给指定的人点赞
+//        getContentResolver().notifyChange(Uri.parse(Constants.back),null);
 
-
-            if (rootInActiveWindow.findAccessibilityNodeInfosByText(Constants.new_friends) != null &&
-                    rootInActiveWindow.findAccessibilityNodeInfosByText(Constants.new_friends).size() > 0) {//当前为通讯录界面
-                isContactsPage = true;
-                showHearts.priseAtNameInContacts(getRootInActiveWindow());
-            } else if (rootInActiveWindow.getContentDescription().toString().contains(Constants.details)) {//当前详细资料页面
-                isContactsPage = false;
-                showHearts.gotoPhoto(rootInActiveWindow);//跳转到个人相册
-            } else if (rootInActiveWindow.getContentDescription().toString().contains(Constants.person)) {//相册列表
-                isContactsPage = false;
-                List<AccessibilityNodeInfo> scrollableChildren = showHearts.getScrollableChildren(rootInActiveWindow, true);
-                showHearts.clickFirstPhoto(scrollableChildren);
-            } else if (rootInActiveWindow.findAccessibilityNodeInfosByText(Constants.comment) != null &&
-                    rootInActiveWindow.findAccessibilityNodeInfosByText(Constants.comment).size() > 0) {//相册详情页
-                isContactsPage = false;
-                showHearts.clickPraise(rootInActiveWindow);
-                isClickedPraise = true;
-            } else if (isContactsPage) {
-                showHearts.priseAtNameInContacts(getRootInActiveWindow());
-            }
-        }
     }
 
     /**
