@@ -164,7 +164,8 @@ public boolean isFirst=true,isClickedPraise=false;
      * 在朋友圈页面滚动 pageTurningTime次内的所有朋友点赞
      */
     public void praiseInFirendsCircle(AccessibilityNodeInfo rootInActiveWindow){
-        if (rootInActiveWindow.getContentDescription().toString().equals(Constants.friendsCirclePage)) {//发现页面
+        if (rootInActiveWindow.getContentDescription()!=null &&
+                rootInActiveWindow.getContentDescription().toString().equals(Constants.friendsCirclePage)) {//发现页面
             List<AccessibilityNodeInfo> scrollableChildren = getScrollableChildren(rootInActiveWindow, true);
             if (scrollableChildren.size() > 0) {
                 List<AccessibilityNodeInfo> list = scrollableChildren.get(0).findAccessibilityNodeInfosByText(Constants.comment);
