@@ -44,8 +44,8 @@ public class BasePresenter {
         public void onChange(boolean selfChange, Uri uri) {
             super.onChange(selfChange, uri);
             if (uri.toString().contains("scroll")) {
-                scrollscreen(bean.nodeInfo, bean.keywords);
-                clickText(bean.nodeInfo, bean.text, bean.isNeedNotify);
+//                scrollscreen(bean.nodeInfo, bean.keywords);
+//                clickText(bean.nodeInfo, bean.text, bean.isNeedNotify);
             }
         }
     };

@@ -23,7 +23,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         setContentView(getLayoutId());
         context = this;
 //        redPacket = new RedPacketPresenter(context);
-//        showHearts = new ShowHeartsPresenter(context);
+        showHearts = new ShowHeartsPresenter(context);
         initView();
         initData();
     }

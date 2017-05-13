@@ -63,13 +63,12 @@ public boolean isFirst=true;
     public  void gotoContacts(AccessibilityNodeInfo info){//Constants.new_friends
         if (isFirst) {
             clickText(info, Constants.contacts,false);
-//            scrollscreen(info,"");
             isFirst = false;
         }
     }
 
     public void priseAtNameInContacts(AccessibilityNodeInfo info){
-        scrollAndClick("二姨夫",800,info,true,"新的朋友");
+        scrollAndClick(Constants.person,800,info,true,Constants.new_friends);
         sendNotify(true, Constants.uri_scroll);
     }
 
@@ -81,11 +80,7 @@ public boolean isFirst=true;
         if ((scrollableChildren!=null)) {
             if (scrollableChildren.size() > 0) {
                 AccessibilityNodeInfo accessibilityNodeInfo = scrollableChildren.get(0);//ListView  朋友圈的那个listview
-//                AccessibilityNodeInfo child = accessibilityNodeInfo.getChild(1).getChild(2).getChild(1);//转发的内容 或只有文字:朋友圈父布局右边可以点击的部分
                 AccessibilityNodeInfo child = accessibilityNodeInfo.getChild(1).getChild(0).getChild(1);//转发的内容 或只有文字:朋友圈父布局右边可以点击的部分
-//                if (!child.isClickable()) {
-//                     child = child.getChild(0);//图文: 父布局右边可以点击的
-//                }
                 if (child.isClickable()) {
                 child.performAction(AccessibilityNodeInfo.ACTION_CLICK);
                 }
@@ -98,15 +93,6 @@ public boolean isFirst=true;
      * @param rootInActiveWindow
      */
     public void clickPraise(AccessibilityNodeInfo rootInActiveWindow) {
-        List<AccessibilityNodeInfo> nodeInfos = rootInActiveWindow.findAccessibilityNodeInfosByText("赞");
-//        if (nodeInfos != null && nodeInfos.size()>0) {
-//                AccessibilityNodeInfo accessibilityNodeInfo = nodeInfos.get(0);
-//            if (!accessibilityNodeInfo.isClickable()) {
-//                accessibilityNodeInfo = accessibilityNodeInfo.getParent();
-//            }
-//                accessibilityNodeInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-//
-//        }
-        clickText(rootInActiveWindow, "赞", true);
+        clickText(rootInActiveWindow, Constants.praise, true);
     }
 }

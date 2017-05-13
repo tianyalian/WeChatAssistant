@@ -23,7 +23,7 @@ import business_android_client.wechatassistant.utils.Constants;
 public class WeChatService extends AccessibilityService {
     public RedPacketPresenter redPacket;
     public ShowHeartsPresenter showHearts;
-    public boolean isFirst = true, isNeedPrise = true, isContactsPage=false;
+    public boolean isFirst = true, isNeedPrise = true, isContactsPage=false ,isClickedPraise=false;
     private ContentObserver observer = new ContentObserver(new Handler()) {
         @Override
         public void onChange(boolean selfChange, Uri uri) {
@@ -49,26 +49,26 @@ public class WeChatService extends AccessibilityService {
             isFirst = false;
             showHearts.gotoContacts(rootInActiveWindow);//到联系人列表
         }
-        if (rootInActiveWindow != null) {
+        if (rootInActiveWindow != null && !isClickedPraise) {
 
 
-            if (rootInActiveWindow.findAccessibilityNodeInfosByText("新的朋友") != null &&
-                    rootInActiveWindow.findAccessibilityNodeInfosByText("新的朋友").size() > 0) {//当前为通讯录界面
-//                rootInActiveWindow.getChild(0).
-                        isContactsPage = true;
+            if (rootInActiveWindow.findAccessibilityNodeInfosByText(Constants.new_friends) != null &&
+                    rootInActiveWindow.findAccessibilityNodeInfosByText(Constants.new_friends).size() > 0) {//当前为通讯录界面
+                isContactsPage = true;
                 showHearts.priseAtNameInContacts(getRootInActiveWindow());
-            }else if (rootInActiveWindow.getContentDescription().toString().contains("详细资料")) {//当前详细资料页面
+            } else if (rootInActiveWindow.getContentDescription().toString().contains(Constants.details)) {//当前详细资料页面
                 isContactsPage = false;
                 showHearts.gotoPhoto(rootInActiveWindow);//跳转到个人相册
-            } else if (rootInActiveWindow.getContentDescription().toString().contains("二姨夫")) {//相册列表
+            } else if (rootInActiveWindow.getContentDescription().toString().contains(Constants.person)) {//相册列表
                 isContactsPage = false;
                 List<AccessibilityNodeInfo> scrollableChildren = showHearts.getScrollableChildren(rootInActiveWindow, true);
                 showHearts.clickFirstPhoto(scrollableChildren);
-            } else if (rootInActiveWindow.findAccessibilityNodeInfosByText("评论") != null &&
-                    rootInActiveWindow.findAccessibilityNodeInfosByText("评论").size() > 0) {//相册详情页
+            } else if (rootInActiveWindow.findAccessibilityNodeInfosByText(Constants.comment) != null &&
+                    rootInActiveWindow.findAccessibilityNodeInfosByText(Constants.comment).size() > 0) {//相册详情页
                 isContactsPage = false;
                 showHearts.clickPraise(rootInActiveWindow);
-            } else  if (isContactsPage) {
+                isClickedPraise = true;
+            } else if (isContactsPage) {
                 showHearts.priseAtNameInContacts(getRootInActiveWindow());
             }
         }
