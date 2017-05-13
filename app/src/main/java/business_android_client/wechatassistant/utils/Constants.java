@@ -18,9 +18,12 @@ public class Constants {
             comment = "评论",
             details = "详细资料",
             detailPage = "当前所在页面,详情",
+            friendsCirclePage = "当前所在页面,朋友圈",
             praise = "赞",
+            shake="摇一摇",
             back="content://backPress",
             TAG = "WeChatService_TAG:";
+    public static int pageTurningTime = 3;
     public static String person = "红光";
 
 }

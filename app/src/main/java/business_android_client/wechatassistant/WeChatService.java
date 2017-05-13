@@ -47,8 +47,9 @@ public class WeChatService extends AccessibilityService {
             isFirst = false;
             showHearts.gotoContacts(rootInActiveWindow);//到联系人列表
         }
-//        showHearts.praiseOne(rootInActiveWindow);//给指定的人点赞
+//        showHearts.praiseOneInContacts(rootInActiveWindow);//通过通讯录给指定的人点赞
 //        getContentResolver().notifyChange(Uri.parse(Constants.back),null);
+        showHearts.praiseInFirendsCircle(rootInActiveWindow);
 
     }
 

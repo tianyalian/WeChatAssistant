@@ -18,7 +18,7 @@ import business_android_client.wechatassistant.utils.Constants;
 
 public class ShowHeartsPresenter extends BasePresenter {
 
-public boolean isFirst=true;
+public boolean isFirst=true,isClickedPraise=false;
 
     private AlertDialog.Builder builder;
 
@@ -60,7 +60,11 @@ public boolean isFirst=true;
 
     }
 
-    //进入联系人界面
+
+    /**
+     * 进入联系人界面
+     * @param info
+     */
     public  void gotoContacts(AccessibilityNodeInfo info){//Constants.new_friends
         if (isFirst) {
             clickText(info, Constants.contacts,false);
@@ -68,6 +72,10 @@ public boolean isFirst=true;
         }
     }
 
+    /**
+     * 查找通讯录并点击指定的人名
+     * @param info
+     */
     public void priseAtNameInContacts(AccessibilityNodeInfo info){
         scrollAndClick(Constants.person,800,info,false,Constants.new_friends);
         sendNotify(false, Constants.uri_scroll);
@@ -94,15 +102,15 @@ public boolean isFirst=true;
      * @param rootInActiveWindow
      */
     public void clickPraise(AccessibilityNodeInfo rootInActiveWindow) {
-        clickText(rootInActiveWindow, Constants.praise, true);
+        clickText(rootInActiveWindow, Constants.praise, false);
     }
-    public boolean  isClickedPraise=false;
+
 
     /**
-     * 从通讯录界面开始,到朋友相册页面,给第一条点赞
+     * 从通讯录界面开始,找到指定朋友,进入朋友圈相册页面,给第一条点赞
      * @param rootInActiveWindow
      */
-    public void praiseOne( AccessibilityNodeInfo rootInActiveWindow){
+    public void praiseOneInContacts( AccessibilityNodeInfo rootInActiveWindow){
         if (rootInActiveWindow != null && !isClickedPraise) {
 
 //            if (rootInActiveWindow.findAccessibilityNodeInfosByText(Constants.new_friends) != null &&
@@ -124,7 +132,7 @@ public boolean isFirst=true;
                 isClickedPraise = true;
             } else if (Constants.detailPage.equals(rootInActiveWindow.getContentDescription().toString())){//如果是朋友圈音乐
                 isClickedPraise = true;
-                rootInActiveWindow.performAction(AccessibilityService.GLOBAL_ACTION_BACK);
+//                rootInActiveWindow.performAction(AccessibilityService.GLOBAL_ACTION_BACK);
             }
 //            else {
 //                rootInActiveWindow.performAction(AccessibilityService.GLOBAL_ACTION_POWER_DIALOG);
@@ -135,5 +143,45 @@ public boolean isFirst=true;
 //            }
         }
     }
+
+    /**
+     * 到发现页面
+     * @param rootInActiveWindow
+     */
+    public void gotoDiscover(AccessibilityNodeInfo rootInActiveWindow){
+        clickText(rootInActiveWindow, Constants.discover_text, false);
+    }
+
+    /**
+     * 到朋友圈界面
+     * @param rootInActiveWindow
+     */
+    public void gotoFriendsCircle(AccessibilityNodeInfo rootInActiveWindow){
+        clickText(rootInActiveWindow, Constants.frieds_circle, false);
+    }
+
+    /**
+     * 在朋友圈页面滚动 pageTurningTime次内的所有朋友点赞
+     */
+    public void praiseInFirendsCircle(AccessibilityNodeInfo rootInActiveWindow){
+        if (rootInActiveWindow.getContentDescription().toString().equals(Constants.friendsCirclePage)) {//发现页面
+            List<AccessibilityNodeInfo> scrollableChildren = getScrollableChildren(rootInActiveWindow, true);
+            if (scrollableChildren.size() > 0) {
+                List<AccessibilityNodeInfo> list = scrollableChildren.get(0).findAccessibilityNodeInfosByText(Constants.comment);
+                for (int i=0;i< list.size();i++) {
+                    list.get(i).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+
+                }
+
+            }
+
+        } else if (rootInActiveWindow.findAccessibilityNodeInfosByText(Constants.discover_text) != null &&
+                rootInActiveWindow.findAccessibilityNodeInfosByText(Constants.discover_text).size() > 0) {//微信
+            gotoDiscover(rootInActiveWindow);
+            gotoFriendsCircle(rootInActiveWindow);
+        }
+
+    }
+
 
 }
