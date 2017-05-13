@@ -88,14 +88,29 @@ public class WeChatService extends AccessibilityService {
     @Override
     protected void onServiceConnected() {
         super.onServiceConnected();
-        redPacket = new RedPacketPresenter(WeChatService.this);
-        showHearts = new ShowHeartsPresenter(WeChatService.this);
-        Toast.makeText(WeChatService.this, "服务启动!", Toast.LENGTH_SHORT).show();
-//        showHearts.startMainActivity();
-        showHearts.openWechat();
-        getContentResolver().registerContentObserver(Uri.parse(Constants.notify), true, observer);
+        initData();
+
     }
 
+    /**
+     * 初始化数据
+     */
+    private void initData() {
+        if (redPacket == null) {
+            redPacket = new RedPacketPresenter(WeChatService.this);
+            showHearts = new ShowHeartsPresenter(WeChatService.this);
+            Toast.makeText(WeChatService.this, "服务启动!", Toast.LENGTH_SHORT).show();
+//        showHearts.startMainActivity();
+            showHearts.openWechat();
+            getContentResolver().registerContentObserver(Uri.parse(Constants.notify), true, observer);
+        }
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        initData();
+    }
 
     /**
      * 在系统要关闭此service时调用。

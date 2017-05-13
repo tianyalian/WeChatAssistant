@@ -82,8 +82,7 @@ public boolean isFirst=true;
             if (scrollableChildren.size() > 0) {
                 AccessibilityNodeInfo accessibilityNodeInfo = scrollableChildren.get(0);//ListView  朋友圈的那个listview
 //                AccessibilityNodeInfo child = accessibilityNodeInfo.getChild(1).getChild(2).getChild(1);//转发的内容 或只有文字:朋友圈父布局右边可以点击的部分
-                AccessibilityNodeInfo child = accessibilityNodeInfo.getChild(1).getChild(0);//转发的内容 或只有文字:朋友圈父布局右边可以点击的部分
-
+                AccessibilityNodeInfo child = accessibilityNodeInfo.getChild(1).getChild(0).getChild(1);//转发的内容 或只有文字:朋友圈父布局右边可以点击的部分
 //                if (!child.isClickable()) {
 //                     child = child.getChild(0);//图文: 父布局右边可以点击的
 //                }
@@ -100,8 +99,14 @@ public boolean isFirst=true;
      */
     public void clickPraise(AccessibilityNodeInfo rootInActiveWindow) {
         List<AccessibilityNodeInfo> nodeInfos = rootInActiveWindow.findAccessibilityNodeInfosByText("赞");
-        if (nodeInfos != null && nodeInfos.size()>0) {
-            nodeInfos.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
-        }
+//        if (nodeInfos != null && nodeInfos.size()>0) {
+//                AccessibilityNodeInfo accessibilityNodeInfo = nodeInfos.get(0);
+//            if (!accessibilityNodeInfo.isClickable()) {
+//                accessibilityNodeInfo = accessibilityNodeInfo.getParent();
+//            }
+//                accessibilityNodeInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+//
+//        }
+        clickText(rootInActiveWindow, "赞", true);
     }
 }
