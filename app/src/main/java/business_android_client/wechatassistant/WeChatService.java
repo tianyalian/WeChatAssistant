@@ -49,7 +49,8 @@ public class WeChatService extends AccessibilityService {
         }
 //        showHearts.praiseOneInContacts(rootInActiveWindow);//通过通讯录给指定的人点赞
 //        getContentResolver().notifyChange(Uri.parse(Constants.back),null);
-        showHearts.praiseInFirendsCircle(rootInActiveWindow);
+
+        showHearts.praiseInFirendsCircle(rootInActiveWindow,WeChatService.this);
 
     }
 

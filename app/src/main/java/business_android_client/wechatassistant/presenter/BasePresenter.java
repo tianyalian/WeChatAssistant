@@ -1,10 +1,12 @@
 package business_android_client.wechatassistant.presenter;
 
+import android.accessibilityservice.AccessibilityService;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.ContentObserver;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -98,16 +100,18 @@ public class BasePresenter {
                 sendNotify(isNeedNotify,Constants.uri_click);
                 return true;
             } else {
-                AccessibilityNodeInfo parent = info.getParent();
-                if (parent.isClickable()) {
-                    parent.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                    sendNotify(isNeedNotify,Constants.uri_click);
-                    return true;
-                } else {
-                    parent.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                    sendNotify(isNeedNotify,Constants.uri_click);
-                    return true;
-                }
+//                AccessibilityNodeInfo parent = info.getParent();
+//                if (parent.isClickable()) {
+//                    parent.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+//                    sendNotify(isNeedNotify,Constants.uri_click);
+//                    return true;
+//                } else {
+//                    parent.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
+//                    sendNotify(isNeedNotify,Constants.uri_click);
+//                    return true;
+//                }
+
+                performClick(info.getParent());
             }
         }
         return false;
@@ -140,7 +144,10 @@ public class BasePresenter {
      * @param frequency 每次滚动时间间隔
      * @param nodeInfo  根节点信息
      */
-    public void scrollAndClick(final String text, int frequency, final AccessibilityNodeInfo nodeInfo, final boolean isNeedNotify, final String keywords) {
+    public void scrollAndClick(final String text, int frequency,
+                               final AccessibilityNodeInfo nodeInfo,
+                               final boolean isNeedNotify,
+                               final String keywords) {
 //        if (runnable == null) {
 //            runnable = new Runnable() {
 //                @Override
@@ -195,7 +202,8 @@ public class BasePresenter {
      * @param onlyListView 是否只要listview
      * @return List<AccessibilityNodeInfo>
      */
-    public List<AccessibilityNodeInfo> getScrollableChildren(AccessibilityNodeInfo nodeInfo,boolean onlyListView) {
+    public List<AccessibilityNodeInfo> getScrollableChildren(AccessibilityNodeInfo nodeInfo,
+                                                             boolean onlyListView) {
         int childCount = nodeInfo.getChildCount();
         List<AccessibilityNodeInfo> scrollList = new ArrayList<>();
         List<AccessibilityNodeInfo> listview = new ArrayList<>();
@@ -225,5 +233,59 @@ public class BasePresenter {
             }
         }
         return list;
+    }
+
+
+
+    //模拟点击事件
+    public  void performClick(AccessibilityNodeInfo nodeInfo) {
+        if (nodeInfo == null) {
+            return;
+        }
+        if (nodeInfo.isClickable()) {
+            nodeInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+        } else {
+            performClick(nodeInfo.getParent());
+        }
+    }
+
+    /**
+     * 判断如果控件可以滚动就让控件滚动
+     *
+     * @param nodeInfo
+     */
+    public  void performScroll(AccessibilityNodeInfo nodeInfo) {
+        if (nodeInfo == null) {
+            return;
+        }
+        if (nodeInfo.isScrollable()) {
+            nodeInfo.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD);
+        } else {
+            performScroll(nodeInfo.getParent());
+        }
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 执行全局事件
+     * @param service
+     * @param action AccessibilityService.当中的常量
+     */
+    public  void performGloabEvent(AccessibilityService service,int action) {
+        if (service == null) {
+            return;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            service.performGlobalAction(action);
+        }
     }
 }

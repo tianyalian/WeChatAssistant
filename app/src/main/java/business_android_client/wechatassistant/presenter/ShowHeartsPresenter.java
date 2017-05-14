@@ -18,12 +18,14 @@ import business_android_client.wechatassistant.utils.Constants;
 
 public class ShowHeartsPresenter extends BasePresenter {
 
-public boolean isFirst=true,isClickedPraise=false;
+    public boolean isFirst=true,isClickedPraise=false;
+    public int count;
 
     private AlertDialog.Builder builder;
 
     public ShowHeartsPresenter(Context ctx) {
         super(ctx);
+        count = Constants.pageTurningTime;
     }
 
     /**
@@ -163,24 +165,35 @@ public boolean isFirst=true,isClickedPraise=false;
     /**
      * 在朋友圈页面滚动 pageTurningTime次内的所有朋友点赞
      */
-    public void praiseInFirendsCircle(AccessibilityNodeInfo rootInActiveWindow){
-        if (rootInActiveWindow.getContentDescription()!=null &&
-                rootInActiveWindow.getContentDescription().toString().equals(Constants.friendsCirclePage)) {//发现页面
-            List<AccessibilityNodeInfo> scrollableChildren = getScrollableChildren(rootInActiveWindow, true);
-            if (scrollableChildren.size() > 0) {
-                List<AccessibilityNodeInfo> list = scrollableChildren.get(0).findAccessibilityNodeInfosByText(Constants.comment);
-                for (int i=0;i< list.size();i++) {
-                    list.get(i).performAction(AccessibilityNodeInfo.ACTION_CLICK);
-
+    public void praiseInFirendsCircle(AccessibilityNodeInfo rootInActiveWindow,AccessibilityService service){
+        if (count > 0) {
+            if (rootInActiveWindow.getContentDescription() != null &&
+                    rootInActiveWindow.getContentDescription().toString().equals(Constants.friendsCirclePage)) {//发现页面
+                List<AccessibilityNodeInfo> scrollableChildren = getScrollableChildren(rootInActiveWindow, true);
+                if (scrollableChildren.size() > 0) {
+                    List<AccessibilityNodeInfo> list = scrollableChildren.get(0).findAccessibilityNodeInfosByText(Constants.comment);
+                    for (int i = 0; i < list.size(); i++) {
+                        AccessibilityNodeInfo nodeInfo = list.get(i);
+                        nodeInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                        clickText(rootInActiveWindow, Constants.praise, false);
+                    }
+                    scrollableChildren.get(0).performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD);
+                    count--;
                 }
 
+            } else if (rootInActiveWindow.findAccessibilityNodeInfosByText(Constants.discover_text) != null &&
+                    rootInActiveWindow.findAccessibilityNodeInfosByText(Constants.discover_text).size() > 0) {//微信
+                gotoDiscover(rootInActiveWindow);
+                gotoFriendsCircle(rootInActiveWindow);
             }
 
-        } else if (rootInActiveWindow.findAccessibilityNodeInfosByText(Constants.discover_text) != null &&
-                rootInActiveWindow.findAccessibilityNodeInfosByText(Constants.discover_text).size() > 0) {//微信
-            gotoDiscover(rootInActiveWindow);
-            gotoFriendsCircle(rootInActiveWindow);
+        } else if (count==0){
+            performGloabEvent(service,AccessibilityService.GLOBAL_ACTION_BACK);
+            performGloabEvent(service,AccessibilityService.GLOBAL_ACTION_BACK);
+            performGloabEvent(service,AccessibilityService.GLOBAL_ACTION_HOME);
+            count--;
         }
+
 
     }
 
