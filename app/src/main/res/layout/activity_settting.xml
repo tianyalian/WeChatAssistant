@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dph_line_cut"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@drawable/linearlayout_divider"
+        android:orientation="vertical"
+        android:showDividers="middle">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="4dp"
+            android:text="@string/time_desc"
+            android:textColor="@color/gray_background"
+            android:textSize="12dp" />
+
+        <LinearLayout
+            style="@style/LinearLayoutAttr"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/MyTextStyle"
+                android:text="点赞时间:" />
+
+            <TextView
+                android:id="@+id/tv_start_time"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:drawableRight="@drawable/triange_down"
+                android:gravity="center_vertical"
+                android:text="时间1" />
+
+            <TextView
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="----" />
+
+            <TextView
+                android:id="@+id/tv_end_time"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="时间2:" />
+        </LinearLayout>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="4dp"
+            android:text="@string/friends_desc"
+            android:textColor="@color/gray_background"
+            android:textSize="12dp" />
+
+        <LinearLayout
+            style="@style/LinearLayoutAttr"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/MyTextStyle"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="朋友1:" />
+
+            <EditText
+                android:id="@+id/et_mobile"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:hint="微信通讯录中的好友名"
+                android:maxLength="11"
+                tools:text="Andy" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            style="@style/LinearLayoutAttr"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/MyTextStyle"
+                android:text="朋友2:" />
+
+            <EditText
+                android:id="@+id/et_cost"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            style="@style/LinearLayoutAttr"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/MyTextStyle"
+                android:text="朋友3:" />
+
+            <EditText
+                android:id="@+id/et_discount"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/LinearLayoutAttr"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/MyTextStyle"
+                android:layout_width="95dp"
+                android:text="点赞类型:" />
+
+            <RadioGroup
+                android:id="@+id/rg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/lv_time"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rb_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/rb_all_desc" />
+
+                <RadioButton
+                    android:id="@+id/rb_single"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/rb_single_desc" />
+
+
+            </RadioGroup>
+
+
+        </LinearLayout>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="4dp"
+            android:text="@string/all_friends_praise_desc"
+            android:textColor="@color/gray_background"
+            android:textSize="12dp" />
+
+
+        <LinearLayout
+            style="@style/LinearLayoutAttr"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/MyTextStyle"
+                android:text="点赞开关:" />
+
+            <Switch
+                android:id="@+id/sw_praise"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/LinearLayoutAttr"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                style="@style/MyTextStyle"
+                android:gravity="left"
+                android:text="红包开关:" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            style="@style/LinearLayoutAttr"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/MyTextStyle"
+                android:text="红包开关:" />
+
+            <Switch
+                android:id="@+id/sw_red_packet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/LinearLayoutAttr"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/MyTextStyle"
+                android:text="测试点赞:" />
+
+            <Button
+                android:id="@+id/test_all_praise"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="朋友圈测试" />
+
+            <Button
+                android:id="@+id/test_contacts_praise"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="通讯录测试" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>

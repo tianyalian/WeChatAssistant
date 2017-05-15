@@ -2,4 +2,10 @@
     <string name="app_name">WeChatAssistant</string>
     <string name="accessibility_description">能够帮助你自动抢红包,自动给设定的朋友点赞</string>
     <string name="test_service_label">微信助手</string>
+    <string name="friends_desc">请填入微信--通讯录中显示的好友名字,不能写错</string>
+    <string name="time_desc">每天有两次机会给好友点赞,可以设置不同的时间,至少需要设置时间1,
+        朋友圈所有好友点赞和通讯录指定好友点赞都使用时间1,如果不设置,不执行点赞</string>
+    <string name="rb_all_desc">朋友圈,所有</string>
+    <string name="rb_single_desc">通讯录,指定</string>
+    <string name="all_friends_praise_desc">目前设置(朋友圈,所有)点赞类型能够点赞的数量为:手机屏幕高度3倍能够显示的朋友圈的数量,大致为6--12条</string>
 </resources>
