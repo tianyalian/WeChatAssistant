@@ -3,6 +3,7 @@ package business_android_client.wechatassistant.base;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import business_android_client.wechatassistant.presenter.RedPacketPresenter;
 import business_android_client.wechatassistant.presenter.ShowHeartsPresenter;
@@ -28,7 +29,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         initData();
     }
 
-    protected abstract int getLayoutId();
+    protected abstract View getLayoutId();
 
     protected abstract void initView();
 
