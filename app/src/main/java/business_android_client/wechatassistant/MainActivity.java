@@ -33,15 +33,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_main;
+        return R.layout.activity_settting;
 
     }
 
     @Override
     protected void initView() {
-        button = (Button) findViewById(R.id.button);
-        button.setOnClickListener(this);
-        editText = (EditText) findViewById(R.id.editText);
+//        button = (Button) findViewById(R.id.button);
+//        button.setOnClickListener(this);
+//        editText = (EditText) findViewById(R.id.editText);
         getContentResolver().registerContentObserver(Uri.parse(Constants.back),false,observer);
     }
 

@@ -177,6 +177,7 @@
 
             <Switch
                 android:id="@+id/sw_praise"
+                android:checked="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
@@ -216,6 +217,7 @@
         <LinearLayout
             style="@style/LinearLayoutAttr"
             android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"
             android:orientation="horizontal">
 
             <TextView
@@ -224,16 +226,20 @@
 
             <Button
                 android:id="@+id/test_all_praise"
+                android:layout_marginLeft="4dp"
                 android:layout_width="wrap_content"
-                android:layout_height="38dp"
+                android:layout_height="35dp"
                 android:paddingLeft="20dp"
+                android:background="@drawable/button_selecter"
                 android:paddingRight="20dp"
                 android:text="朋友圈测试" />
 
             <Button
                 android:id="@+id/test_contacts_praise"
+                android:background="@drawable/button_selecter"
                 android:layout_width="wrap_content"
-                android:layout_height="38dp"
+                android:layout_marginLeft="5dp"
+                android:layout_height="35dp"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
                 android:text="通讯录测试" />
