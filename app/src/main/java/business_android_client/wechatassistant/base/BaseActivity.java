@@ -14,7 +14,7 @@ import business_android_client.wechatassistant.presenter.ShowHeartsPresenter;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
-    public  Context context;
+    public  Context ctx;
     public RedPacketPresenter redPacket;
     public ShowHeartsPresenter showHearts;
 
@@ -22,9 +22,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutId());
-        context = this;
-//        redPacket = new RedPacketPresenter(context);
-        showHearts = new ShowHeartsPresenter(context);
+        ctx = this;
+//        redPacket = new RedPacketPresenter(ctx);
+        showHearts = new ShowHeartsPresenter(ctx);
         initView();
         initData();
     }

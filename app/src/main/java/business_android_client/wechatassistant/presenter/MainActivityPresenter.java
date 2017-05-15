@@ -1,5 +1,6 @@
 package business_android_client.wechatassistant.presenter;
 
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.view.View;
 import android.widget.Button;
@@ -9,6 +10,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import business_android_client.wechatassistant.R;
 import business_android_client.wechatassistant.utils.Constants;
@@ -34,6 +36,7 @@ public class MainActivityPresenter {
     private Switch sw_red_packet;
     private Button test_all_praise;
     private Button test_contacts_praise;
+    private TimePickerDialog timePickerDialog;
 
     public MainActivityPresenter(Context ctx) {
         this.ctx=ctx;
@@ -113,4 +116,23 @@ public class MainActivityPresenter {
     public boolean getRedPacketSwitchState() {
         return sw_red_packet.isChecked();
     }
+
+    public void showTimeDialog(final boolean isStartTime){
+        if (timePickerDialog == null) {
+            timePickerDialog = new TimePickerDialog(ctx, new TimePickerDialog.OnTimeSetListener() {
+                @Override
+                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                    if (isStartTime) {
+                        tv_start_time.setText(hourOfDay+":"+minute);
+                        SPUtil.put(ctx,Constants.start_time,hourOfDay+":"+minute);
+                    } else {
+                        tv_end_time.setText(hourOfDay+":"+minute);
+                        SPUtil.put(ctx,Constants.end_time,hourOfDay+":"+minute);
+                    }
+                }
+            }, 8, 0, true);
+        }
+        timePickerDialog.show();
+    }
+
 }
