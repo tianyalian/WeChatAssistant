@@ -81,6 +81,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:hint="微信通讯录中的好友名"
+                android:textSize="16dp"
                 android:maxLength="11"
                 tools:text="Andy" />
         </LinearLayout>
@@ -98,6 +99,7 @@
             <EditText
                 android:id="@+id/friends2"
                 android:layout_width="0dp"
+                android:textSize="16dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
         </LinearLayout>
@@ -115,6 +117,7 @@
             <EditText
                 android:id="@+id/friends3"
                 android:layout_width="0dp"
+                android:textSize="16dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
         </LinearLayout>
