@@ -50,8 +50,10 @@ public class WeChatService extends AccessibilityService {
 //        showHearts.praiseOneInContacts(rootInActiveWindow);//通过通讯录给指定的人点赞
 //        getContentResolver().notifyChange(Uri.parse(Constants.back),null);
 
-        showHearts.praiseInFirendsCircle(rootInActiveWindow,WeChatService.this);
-
+//        showHearts.praiseInFirendsCircle(rootInActiveWindow,WeChatService.this);
+        performGlobalAction(AccessibilityService.GLOBAL_ACTION_HOME);
+        performGlobalAction(AccessibilityService.GLOBAL_ACTION_RECENTS);
+        performGlobalAction(AccessibilityService.GLOBAL_ACTION_TOGGLE_SPLIT_SCREEN);
     }
 
     /**

@@ -21,6 +21,14 @@ public class Constants {
             friendsCirclePage = "当前所在页面,朋友圈",
             praise = "赞",
             shake="摇一摇",
+            name1="name1",
+            name2="name2",
+            name3="name3",
+            end_time="endTime",
+            start_time="start_time",
+            praise_all="praiseAll",
+            sw_red_packet="swRedPacket",
+            sw_praise="swPraise",
             back="content://backPress",
             TAG = "WeChatService_TAG:";
     public static int pageTurningTime = 3;
