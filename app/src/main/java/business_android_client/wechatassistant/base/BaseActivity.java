@@ -5,9 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import business_android_client.wechatassistant.presenter.RedPacketPresenter;
-import business_android_client.wechatassistant.presenter.ShowHeartsPresenter;
-
 /**
  * Created by seeker on 2017/5/8.
  */
@@ -15,8 +12,8 @@ import business_android_client.wechatassistant.presenter.ShowHeartsPresenter;
 public abstract class BaseActivity extends AppCompatActivity {
 
     public  Context ctx;
-    public RedPacketPresenter redPacket;
-    public ShowHeartsPresenter showHearts;
+//    public RedPacketPresenter redPacket;
+//    public ShowHeartsPresenter showHearts;
 
     @Override
     public void onCreate( Bundle savedInstanceState) {
@@ -24,7 +21,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         setContentView(getLayoutId());
         ctx = this;
 //        redPacket = new RedPacketPresenter(ctx);
-        showHearts = new ShowHeartsPresenter(ctx);
+//        showHearts = new ShowHeartsPresenter(ctx);
         initView();
         initData();
     }

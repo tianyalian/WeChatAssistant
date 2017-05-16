@@ -51,9 +51,9 @@ public class WeChatService extends AccessibilityService {
 //        getContentResolver().notifyChange(Uri.parse(Constants.back),null);
 
 //        showHearts.praiseInFirendsCircle(rootInActiveWindow,WeChatService.this);
-        performGlobalAction(AccessibilityService.GLOBAL_ACTION_HOME);
-        performGlobalAction(AccessibilityService.GLOBAL_ACTION_RECENTS);
-        performGlobalAction(AccessibilityService.GLOBAL_ACTION_TOGGLE_SPLIT_SCREEN);
+//        performGlobalAction(AccessibilityService.GLOBAL_ACTION_HOME);
+//        performGlobalAction(AccessibilityService.GLOBAL_ACTION_RECENTS);
+//        performGlobalAction(AccessibilityService.GLOBAL_ACTION_TOGGLE_SPLIT_SCREEN);
     }
 
     /**
@@ -102,6 +102,7 @@ public class WeChatService extends AccessibilityService {
         getContentResolver().unregisterContentObserver(observer);
         return super.onUnbind(intent);
     }
+
 
 
 }

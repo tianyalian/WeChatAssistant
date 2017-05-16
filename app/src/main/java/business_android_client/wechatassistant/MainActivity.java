@@ -64,8 +64,10 @@ public class MainActivity extends BaseActivity implements
                 presenter.showTimeDialog(true);
                 break;
             case R.id.test_all_praise:
+                presenter.testPraiseAll();
                 break;
             case R.id.test_contacts_praise:
+                presenter.testPraiseContact();
                 break;
         }
     }

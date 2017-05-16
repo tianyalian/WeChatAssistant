@@ -1,10 +1,18 @@
 package business_android_client.wechatassistant.presenter;
 
+import android.accessibilityservice.AccessibilityServiceInfo;
+import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.accessibility.AccessibilityManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -13,6 +21,9 @@ import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
+
+import java.util.List;
 
 import business_android_client.wechatassistant.R;
 import business_android_client.wechatassistant.utils.Constants;
@@ -23,8 +34,8 @@ import business_android_client.wechatassistant.utils.SPUtil;
  */
 
 public class MainActivityPresenter {
-    public static final int PRAISE_TYPE_ALL = 0;
-    public static final int PRAISE_TYPE_CONTACTS = 1;
+    public static final int PRAISE_TYPE_ALL = 0;//朋友圈所有朋友
+    public static final int PRAISE_TYPE_CONTACTS = 1;//通讯录指定朋友
     private final Context ctx;
     private TextView tv_start_time,tv_end_time;
     public EditText et_friends1,et_friends2,et_friends3;
@@ -108,18 +119,34 @@ public class MainActivityPresenter {
     }
 
 
+    /**
+     * 获取点赞类型:通讯录指定朋友  或  朋友圈所有朋友
+     * @return
+     */
     public int getPraiseType() {
         return rb_single.isChecked()?PRAISE_TYPE_CONTACTS:PRAISE_TYPE_ALL;
     }
 
+    /**
+     * 获取点赞开关状态
+     * @return
+     */
     public boolean getPraiseSwitchState() {
         return sw_praise.isChecked();
     }
 
+    /**
+     * 获取红包开关状态
+     * @return
+     */
     public boolean getRedPacketSwitchState() {
         return sw_red_packet.isChecked();
     }
 
+    /**
+     * 显示时间的对话框
+     * @param istime1
+     */
     public void showTimeDialog(boolean istime1){
         isTime1 = istime1;
         if (timePickerDialog == null) {
@@ -139,6 +166,93 @@ public class MainActivityPresenter {
             }, 8, 0, false);
         }
         timePickerDialog.show();
+    }
+
+    /**
+     * 网络连接检查
+     * @return
+     */
+    public boolean checkIntentConnection() {
+        ConnectivityManager manager = (ConnectivityManager) ctx
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo[] info = manager.getAllNetworkInfo();
+        if (info != null) {
+            for (int i = 0; i < info.length; i++) {
+                if (info[i].getState() == NetworkInfo.State.CONNECTED) {
+                    return true;
+                }
+            }
+        }
+        Toast.makeText(ctx, "请打开网络连接", Toast.LENGTH_LONG).show();
+        return false;
+    }
+
+    /**
+     * 朋友圈点赞测试
+     */
+    public void testPraiseAll() {
+        if (prePareTest()) {
+
+        }
+    }
+
+    /**
+     * 联系人点赞测试
+     */
+    public void testPraiseContact() {
+        if (prePareTest()) {
+
+        }
+    }
+
+    /**
+     * 检查当前的AccessibleService是否开启
+     * @return true 开启
+     */
+    public  boolean checkServiceState(){
+        AccessibilityManager am = (AccessibilityManager) ctx.getSystemService(Context.ACCESSIBILITY_SERVICE);
+        List<AccessibilityServiceInfo> serviceList = am.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_ALL_MASK);
+        for (AccessibilityServiceInfo info: serviceList) {
+            if (info.getId().contains(Constants.myPackageName)) {
+                return true;
+            }
+        }
+        showTipsDialog();
+        return false;
+    }
+
+    /**
+     * 显示提示对话框
+     */
+    public  void showTipsDialog() {
+        new AlertDialog.Builder(ctx)
+                .setTitle("提示信息")
+                .setMessage("请到设置中心--辅助功能--无障碍--微信助手--打开设置。")
+                .setNegativeButton("取消", null)
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startAppSettings();
+                    }
+                }).show();
+
+    }
+
+    /**
+     * 启动当前应用设置页面
+     */
+    private  void startAppSettings() {
+        Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+//        intent.setData(Uri.parse("package:" + ctx.getPackageName()));
+        ctx.startActivity(intent);
+    }
+
+    public  boolean prePareTest(){
+        if (checkIntentConnection() && checkServiceState()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

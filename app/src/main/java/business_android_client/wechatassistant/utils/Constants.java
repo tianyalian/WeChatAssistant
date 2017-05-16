@@ -30,6 +30,7 @@ public class Constants {
             sw_red_packet="swRedPacket",
             sw_praise="swPraise",
             back="content://backPress",
+            myPackageName="business_android_client.wechatassistant",
             TAG = "WeChatService_TAG:";
     public static int pageTurningTime = 3;
     public static String person = "红光";
