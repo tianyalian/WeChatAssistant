@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">WeChatAssistant</string>
-    <string name="accessibility_description">能够帮助你自动抢红包,自动给设定的朋友点赞</string>
+    <string name="accessibility_description">红包助手功能:\n1 自动抢红包\n2 自动给设定的朋友点赞(最多3人)\n 3 定时点赞</string>
     <string name="test_service_label">微信助手</string>
     <string name="friends_desc">请填入微信--通讯录中显示的好友名字,不能写错</string>
     <string name="time_desc">每天有两次机会给好友点赞,可以设置不同的时间,至少需要设置时间1,

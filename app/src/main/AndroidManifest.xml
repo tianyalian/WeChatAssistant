@@ -36,6 +36,12 @@
         <!--label  辅助功能的名称
           name 引入资源类型:android.accessibilityservice
         resource:引入资源位置:@xml/text_service_config-->
+
+        <receiver android:name=".AlertReceiver">
+            <intent-filter android:priority="1000" >
+                <action android:name="wechat.assistant"></action>
+            </intent-filter>
+        </receiver>
     </application>
 
 

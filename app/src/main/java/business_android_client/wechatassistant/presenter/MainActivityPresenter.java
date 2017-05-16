@@ -1,7 +1,9 @@
 package business_android_client.wechatassistant.presenter;
 
 import android.accessibilityservice.AccessibilityServiceInfo;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -23,8 +25,12 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
+import business_android_client.wechatassistant.AlertReceiver;
 import business_android_client.wechatassistant.R;
 import business_android_client.wechatassistant.utils.Constants;
 import business_android_client.wechatassistant.utils.SPUtil;
@@ -45,6 +51,7 @@ public class MainActivityPresenter {
     private Button test_all_praise,test_contacts_praise;
     private TimePickerDialog timePickerDialog;
     public boolean isTime1;
+    private PendingIntent sender;
 
     public MainActivityPresenter(Context ctx) {
         this.ctx=ctx;
@@ -91,7 +98,10 @@ public class MainActivityPresenter {
         String time1 = SPUtil.getString(Constants.end_time, "");
         if (!TextUtils.isEmpty(time1)) {
            tv_end_time.setText(time1);
+            getPendingIntent(time1);
         }
+
+
         String time2 = SPUtil.getString(Constants.start_time, "");
         if (!TextUtils.isEmpty(time2)) {
             tv_start_time.setText(time2);
@@ -101,6 +111,16 @@ public class MainActivityPresenter {
         sw_red_packet.setChecked(SPUtil.getBoolean(Constants.sw_red_packet,false));
     }
 
+    public void getPendingIntent(String time){
+        Intent intent = new Intent(ctx, AlertReceiver.class);
+        sender = PendingIntent.getBroadcast(ctx, 22, intent, 0);
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        Calendar c = Calendar.getInstance();
+        String format_time = formatter.format(c.getTime());
+        c.set(2008, 7, 8, 20, 0, 0);
+        c.set(Calendar.MILLISECOND, 0);
+//        return c.getTime().getTime();
+    }
 
     public String getFriendsName(int location) {
         String name = "";
@@ -255,4 +275,16 @@ public class MainActivityPresenter {
         }
     }
 
+    /**
+     * 打开点赞功能
+     */
+    public void openPraise(){
+        AlarmManager am = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
+//        am.set(AlarmManager.RTC_WAKEUP);
+    }
+
+    public void stopPraise(){
+        AlarmManager am = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
+        am.cancel(sender);
+    }
 }
