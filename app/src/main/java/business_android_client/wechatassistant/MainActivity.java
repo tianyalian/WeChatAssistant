@@ -4,9 +4,10 @@ import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.annotation.IdRes;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.RadioGroup;
 
 import business_android_client.wechatassistant.base.BaseActivity;
@@ -16,7 +17,7 @@ import business_android_client.wechatassistant.utils.SPUtil;
 
 public class MainActivity extends BaseActivity implements
         View.OnClickListener,
-        View.OnFocusChangeListener,RadioGroup.OnCheckedChangeListener,
+        TextWatcher,RadioGroup.OnCheckedChangeListener,
         CompoundButton.OnCheckedChangeListener {
 
     /**http://www.cnblogs.com/bloglkl/p/5770279.html   时间日期选择器
@@ -70,27 +71,6 @@ public class MainActivity extends BaseActivity implements
     }
 
     @Override
-    public void onFocusChange(View v, boolean hasFocus) {
-        switch (v.getId()) {
-            case R.id.friends1:
-                if (!hasFocus) {
-                    SPUtil.put(ctx, Constants.name1, ((EditText)v).getText().toString().trim());
-                }
-                break;
-            case R.id.friends2:
-                if (!hasFocus) {
-                    SPUtil.put(ctx, Constants.name2, ((EditText)v).getText().toString().trim());
-                }
-                break;
-            case R.id.friends3:
-                if (!hasFocus) {
-                    SPUtil.put(ctx, Constants.name3, ((EditText)v).getText().toString().trim());
-                }
-                break;
-        }
-    }
-
-    @Override
     public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
         switch (checkedId) {
             case R.id.rb_all:
@@ -111,6 +91,24 @@ public class MainActivity extends BaseActivity implements
             case R.id.sw_red_packet:
                 SPUtil.put(ctx,Constants.sw_red_packet,isChecked);
                 break;
+        }
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        String name = s.toString().trim();
+        if (presenter.et_friends1.hasFocus()) {
+            SPUtil.put(ctx, Constants.name1, name);
+        }else if (presenter.et_friends2.hasFocus()) {
+            SPUtil.put(ctx, Constants.name2, name);
+        }else if (presenter.et_friends3.hasFocus()) {
+            SPUtil.put(ctx, Constants.name3, name);
         }
     }
 }

@@ -2,6 +2,8 @@ package business_android_client.wechatassistant.presenter;
 
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -24,19 +26,14 @@ public class MainActivityPresenter {
     public static final int PRAISE_TYPE_ALL = 0;
     public static final int PRAISE_TYPE_CONTACTS = 1;
     private final Context ctx;
-    private TextView tv_start_time;
-    private TextView tv_end_time;
-    private EditText et_friends1;
-    private EditText et_friends2;
-    private EditText et_friends3;
-    private RadioButton rb_all;
-    private RadioButton rb_single;
+    private TextView tv_start_time,tv_end_time;
+    public EditText et_friends1,et_friends2,et_friends3;
+    private RadioButton rb_all,rb_single;
     private RadioGroup rg;
-    private Switch sw_praise;
-    private Switch sw_red_packet;
-    private Button test_all_praise;
-    private Button test_contacts_praise;
+    private Switch sw_praise,sw_red_packet;
+    private Button test_all_praise,test_contacts_praise;
     private TimePickerDialog timePickerDialog;
+    public boolean isTime1;
 
     public MainActivityPresenter(Context ctx) {
         this.ctx=ctx;
@@ -60,7 +57,7 @@ public class MainActivityPresenter {
 
 
     public void initListener(View.OnClickListener listener,
-                             View.OnFocusChangeListener focus,
+                             TextWatcher watcher,
                              RadioGroup.OnCheckedChangeListener rg_checkchangelistener,
                              CompoundButton.OnCheckedChangeListener cb_checkchangelistener){
         test_all_praise.setOnClickListener(listener);
@@ -70,9 +67,9 @@ public class MainActivityPresenter {
         sw_praise.setOnCheckedChangeListener(cb_checkchangelistener);
         sw_red_packet.setOnCheckedChangeListener(cb_checkchangelistener);
         rg.setOnCheckedChangeListener(rg_checkchangelistener);
-        et_friends1.setOnFocusChangeListener(focus);
-        et_friends2.setOnFocusChangeListener(focus);
-        et_friends3.setOnFocusChangeListener(focus);
+        et_friends3.addTextChangedListener(watcher);
+        et_friends2.addTextChangedListener(watcher);
+        et_friends1.addTextChangedListener(watcher);
     }
 
 
@@ -80,8 +77,14 @@ public class MainActivityPresenter {
         et_friends1.setText(SPUtil.getString(Constants.name1, ""));
         et_friends2.setText(SPUtil.getString(Constants.name2, ""));
         et_friends3.setText(SPUtil.getString(Constants.name3, ""));
-        tv_end_time.setText(SPUtil.getString(Constants.end_time, ""));
-        tv_start_time.setText(SPUtil.getString(Constants.start_time, ""));
+        String time1 = SPUtil.getString(Constants.end_time, "");
+        if (!TextUtils.isEmpty(time1)) {
+           tv_end_time.setText(time1);
+        }
+        String time2 = SPUtil.getString(Constants.start_time, "");
+        if (!TextUtils.isEmpty(time2)) {
+            tv_start_time.setText(time2);
+        }
         rg.check(SPUtil.getBoolean(Constants.praise_all,false)?R.id.rb_all:R.id.rb_single);
         sw_praise.setChecked(SPUtil.getBoolean(Constants.sw_praise,false));
         sw_red_packet.setChecked(SPUtil.getBoolean(Constants.sw_red_packet,false));
@@ -117,20 +120,23 @@ public class MainActivityPresenter {
         return sw_red_packet.isChecked();
     }
 
-    public void showTimeDialog(final boolean isStartTime){
+    public void showTimeDialog(boolean istime1){
+        isTime1 = istime1;
         if (timePickerDialog == null) {
             timePickerDialog = new TimePickerDialog(ctx, new TimePickerDialog.OnTimeSetListener() {
                 @Override
                 public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                    if (isStartTime) {
-                        tv_start_time.setText(hourOfDay+":"+minute);
-                        SPUtil.put(ctx,Constants.start_time,hourOfDay+":"+minute);
+                    if (isTime1) {
+                        String time1 = hourOfDay + ":" + (minute < 10 ? "0"+minute: minute+"");
+                        tv_start_time.setText(time1);
+                        SPUtil.put(ctx,Constants.start_time, time1);
                     } else {
-                        tv_end_time.setText(hourOfDay+":"+minute);
-                        SPUtil.put(ctx,Constants.end_time,hourOfDay+":"+minute);
+                        String time2 = hourOfDay + ":" + (minute < 10 ? "0"+minute: minute+"");
+                        tv_end_time.setText(time2);
+                        SPUtil.put(ctx,Constants.end_time,time2);
                     }
                 }
-            }, 8, 0, true);
+            }, 8, 0, false);
         }
         timePickerDialog.show();
     }

@@ -35,23 +35,26 @@
             <TextView
                 android:id="@+id/tv_start_time"
                 android:layout_width="wrap_content"
+                android:minWidth="70dp"
                 android:layout_height="match_parent"
                 android:drawableRight="@drawable/triange_down"
                 android:gravity="center_vertical"
-                android:text="时间1 ▼" />
+                android:text="时间① ▼" />
 
             <TextView
-                android:layout_width="70dp"
+                android:layout_width="40dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:visibility="invisible"
                 android:text="----" />
 
             <TextView
                 android:id="@+id/tv_end_time"
                 android:layout_width="wrap_content"
+                android:minWidth="70dp"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:text="时间2 ▼" />
+                android:text="时间② ▼" />
         </LinearLayout>
 
 

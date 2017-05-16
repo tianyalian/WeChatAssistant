@@ -139,7 +139,7 @@
         android:layout_toEndOf="@+id/sw_praise" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/editText8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
