@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -18,6 +19,7 @@ import android.view.accessibility.AccessibilityManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
@@ -37,6 +39,8 @@ import business_android_client.wechatassistant.R;
 import business_android_client.wechatassistant.utils.Constants;
 import business_android_client.wechatassistant.utils.SPUtil;
 
+import static business_android_client.wechatassistant.presenter.BasePresenter.openWechat;
+
 /**
  * Created by seeker on 2017/5/15.
  */
@@ -52,6 +56,7 @@ public class MainActivityPresenter {
     private Switch sw_praise, sw_red_packet;
     private Button test_all_praise, test_contacts_praise;
     private TimePickerDialog timePickerDialog;
+    private ImageView iv_del;
     public boolean isTime1;
     private static PendingIntent sender1;
     private static PendingIntent sender2;
@@ -74,6 +79,7 @@ public class MainActivityPresenter {
         et_friends2 = (EditText) v.findViewById(R.id.friends2);
         et_friends3 = (EditText) v.findViewById(R.id.friends3);
         tv_end_time = (TextView) v.findViewById(R.id.tv_end_time);
+        iv_del = (ImageView) v.findViewById(R.id.imageView_del);
         tv_start_time = (TextView) v.findViewById(R.id.tv_start_time);
     }
 
@@ -85,6 +91,7 @@ public class MainActivityPresenter {
         test_all_praise.setOnClickListener(listener);
         test_contacts_praise.setOnClickListener(listener);
         tv_start_time.setOnClickListener(listener);
+        iv_del.setOnClickListener(listener);
         tv_end_time.setOnClickListener(listener);
         sw_praise.setOnCheckedChangeListener(cb_checkchangelistener);
         sw_red_packet.setOnCheckedChangeListener(cb_checkchangelistener);
@@ -228,8 +235,9 @@ public class MainActivityPresenter {
      * 朋友圈点赞测试
      */
     public void testPraiseAll() {
+        sendNotify(Constants.uri_allPraise);
         if (prePareTest()) {
-
+            openWechat();
         }
     }
 
@@ -237,9 +245,14 @@ public class MainActivityPresenter {
      * 联系人点赞测试
      */
     public void testPraiseContact() {
+        sendNotify(Constants.uri_contacts);
         if (prePareTest()) {
-
+            openWechat();
         }
+    }
+
+    public void sendNotify(String action) {
+        ctx.getContentResolver().notifyChange(Uri.parse(action),null);
     }
 
     /**
@@ -296,7 +309,7 @@ public class MainActivityPresenter {
     /**
      * 打开点赞功能
      */
-    public void openPraise() {
+    public static void openPraise() {
         String time1 =  SPUtil.getString(Constants.start_time, "");
         String time2 =  SPUtil.getString(Constants.end_time, "");
         creatAleram(time1, time2);
@@ -322,11 +335,15 @@ public class MainActivityPresenter {
 
     }
 
-    public void closePraise() {
+    public void closePraise(boolean single) {
         AlarmManager am = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
         if (sender1 != null) {
-            am.cancel(sender1);
-            am.cancel(sender2);
+            if (single) {
+                am.cancel(sender2);
+            } else {
+                am.cancel(sender2);
+                am.cancel(sender1);
+            }
         }
     }
 
@@ -335,6 +352,14 @@ public class MainActivityPresenter {
             Intent intent = new Intent(ctx, AlertReceiver.class);
             sender1 = PendingIntent.getBroadcast(ctx, 888, intent, 0);
             sender2 = PendingIntent.getBroadcast(ctx, 666, intent, 0);
+        }
+    }
+
+    public void delTime(){
+        if (!tv_end_time.getText().toString().contains("时间")) {
+            SPUtil.put(ctx, Constants.end_time, "");
+            tv_end_time.setText("时间② ▼");
+            closePraise(true);
         }
     }
 

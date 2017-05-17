@@ -12,6 +12,7 @@ import android.widget.Toast;
 import business_android_client.wechatassistant.presenter.RedPacketPresenter;
 import business_android_client.wechatassistant.presenter.ShowHeartsPresenter;
 import business_android_client.wechatassistant.utils.Constants;
+import business_android_client.wechatassistant.utils.SPUtil;
 
 /**
  * Created by seeker on 2017/5/8.
@@ -28,10 +29,15 @@ public class WeChatService extends AccessibilityService {
             super.onChange(selfChange, uri);
             if (uri.toString().contains("click")) {
                 isNeedPrise = false;
+            } else if (uri.toString().contains("allfriends")) {
+                isAllPraise = true;
+            } else if(uri.toString().contains("contacts")){
+                isAllPraise = false;
             }
         }
     };
     private AccessibilityNodeInfo rootInActiveWindow;
+    private boolean isAllPraise;
 
 
     /**
@@ -46,14 +52,19 @@ public class WeChatService extends AccessibilityService {
         if (isFirst) {
             isFirst = false;
             showHearts.gotoContacts(rootInActiveWindow);//到联系人列表
+        } else {
+            if (isAllPraise) {//朋友圈所有好友点赞
+                showHearts.praiseInFirendsCircle(rootInActiveWindow,WeChatService.this);
+            } else {//通过通讯录给指定的人点赞
+                showHearts.praiseOneInContacts(rootInActiveWindow,WeChatService.this);
+            }
         }
-//        showHearts.praiseOneInContacts(rootInActiveWindow);//通过通讯录给指定的人点赞
 //        getContentResolver().notifyChange(Uri.parse(Constants.back),null);
 
-//        showHearts.praiseInFirendsCircle(rootInActiveWindow,WeChatService.this);
 //        performGlobalAction(AccessibilityService.GLOBAL_ACTION_HOME);
 //        performGlobalAction(AccessibilityService.GLOBAL_ACTION_RECENTS);
 //        performGlobalAction(AccessibilityService.GLOBAL_ACTION_TOGGLE_SPLIT_SCREEN);
+
     }
 
     /**
@@ -83,8 +94,9 @@ public class WeChatService extends AccessibilityService {
             showHearts = new ShowHeartsPresenter(WeChatService.this);
             Toast.makeText(WeChatService.this, "服务启动!", Toast.LENGTH_SHORT).show();
 //        showHearts.startMainActivity();
+            isAllPraise = SPUtil.getBoolean(Constants.praise, false);
             showHearts.openWechat();
-            getContentResolver().registerContentObserver(Uri.parse(Constants.notify), true, observer);
+//            getContentResolver().registerContentObserver(Uri.parse(Constants.notify), true, observer);
         }
     }
 

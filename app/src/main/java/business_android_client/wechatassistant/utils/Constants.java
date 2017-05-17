@@ -14,6 +14,8 @@ public class Constants {
             new_friends = "新的朋友",
             uri_click = notify + "/click",
             uri_scroll = notify + "/scroll",
+            uri_allPraise=notify + "/allfriends",
+            uri_contacts=notify +"/contacts",
             photo = "个人相册",
             comment = "评论",
             details = "详细资料",

@@ -112,7 +112,7 @@ public class ShowHeartsPresenter extends BasePresenter {
      * 从通讯录界面开始,找到指定朋友,进入朋友圈相册页面,给第一条点赞
      * @param rootInActiveWindow
      */
-    public void praiseOneInContacts( AccessibilityNodeInfo rootInActiveWindow){
+    public void praiseOneInContacts( AccessibilityNodeInfo rootInActiveWindow,AccessibilityService service){
         if (rootInActiveWindow != null && !isClickedPraise) {
 
 //            if (rootInActiveWindow.findAccessibilityNodeInfosByText(Constants.new_friends) != null &&
@@ -122,19 +122,28 @@ public class ShowHeartsPresenter extends BasePresenter {
 //            }
             if (rootInActiveWindow.getChildCount()==8 && rootInActiveWindow.getChild(0).getChild(2).isVisibleToUser()){//当前为通讯录界面
                 priseAtNameInContacts(rootInActiveWindow);
-            }else if (rootInActiveWindow.getContentDescription().toString().contains(Constants.details)) {//当前详细资料页面
+            }else if (rootInActiveWindow.getContentDescription().toString()!=null &&
+                    rootInActiveWindow.getContentDescription().toString().contains(Constants.details)) {//当前详细资料页面
                 gotoPhoto(rootInActiveWindow);//跳转到个人相册
-            } else if (rootInActiveWindow.getContentDescription().toString().contains(Constants.person)) {//相册列表
+            } else if (rootInActiveWindow.getContentDescription().toString()!=null &&
+                    rootInActiveWindow.getContentDescription().toString().contains(Constants.person)) {//相册列表
                 List<AccessibilityNodeInfo> scrollableChildren = getScrollableChildren(rootInActiveWindow, true);
                 clickFirstPhoto(scrollableChildren);
-            } else if (rootInActiveWindow.findAccessibilityNodeInfosByText(Constants.comment) != null &&
-                    rootInActiveWindow.findAccessibilityNodeInfosByText(Constants.comment).size() > 0) {//相册详情页
-                clickPraise(rootInActiveWindow);
-                rootInActiveWindow.performAction(AccessibilityService.GLOBAL_ACTION_BACK);
+            } else if ((rootInActiveWindow.findAccessibilityNodeInfosByText(Constants.comment) != null &&
+                    rootInActiveWindow.findAccessibilityNodeInfosByText(Constants.comment).size() > 0)
+                    ||Constants.detailPage.equals(rootInActiveWindow.getContentDescription().toString())) {//相册详情页
+                if (!clickText(rootInActiveWindow, Constants.praise, false)) {
+                    clickText(rootInActiveWindow, Constants.comment, false);
+                    clickText(rootInActiveWindow, Constants.praise, false);
+                }
                 isClickedPraise = true;
-            } else if (Constants.detailPage.equals(rootInActiveWindow.getContentDescription().toString())){//如果是朋友圈音乐
+                performGloabEvent(service, AccessibilityService.GLOBAL_ACTION_BACK);
+                performGloabEvent(service, AccessibilityService.GLOBAL_ACTION_BACK);
+                performGloabEvent(service, AccessibilityService.GLOBAL_ACTION_BACK);
+
+            } else if (Constants.detailPage.equals(rootInActiveWindow.getContentDescription().toString())){//如果是朋友圈音乐  或者已经评论过的朋友圈详情
+
                 isClickedPraise = true;
-//                rootInActiveWindow.performAction(AccessibilityService.GLOBAL_ACTION_BACK);
             }
 //            else {
 //                rootInActiveWindow.performAction(AccessibilityService.GLOBAL_ACTION_POWER_DIALOG);

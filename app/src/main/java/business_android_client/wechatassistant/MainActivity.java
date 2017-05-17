@@ -70,6 +70,9 @@ public class MainActivity extends BaseActivity implements
             case R.id.test_contacts_praise:
                 presenter.testPraiseContact();
                 break;
+            case R.id.imageView_del:
+                presenter.delTime();
+                break;
         }
     }
 
@@ -103,7 +106,7 @@ public class MainActivity extends BaseActivity implements
                 if (isChecked) {
                     presenter.openPraise();
                 } else {
-                    presenter.closePraise();
+                    presenter.closePraise(false);
                 }
                 break;
             case R.id.sw_red_packet:

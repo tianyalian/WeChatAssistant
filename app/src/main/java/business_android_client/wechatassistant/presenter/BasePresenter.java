@@ -26,7 +26,7 @@ import business_android_client.wechatassistant.utils.Constants;
  */
 
 public class BasePresenter {
-    public Context ctx;
+    public static Context ctx;
     public Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -64,7 +64,7 @@ public class BasePresenter {
     /**
      * 打开微信
      */
-    public void openWechat() {
+    public static void openWechat() {
         PackageManager packageManager = ctx.getPackageManager();
         Intent intent = packageManager.getLaunchIntentForPackage(Constants.wechatPackageName);
         ctx.startActivity(intent);
