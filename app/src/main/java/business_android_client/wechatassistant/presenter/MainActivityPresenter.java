@@ -26,8 +26,10 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import business_android_client.wechatassistant.AlertReceiver;
@@ -42,23 +44,25 @@ import business_android_client.wechatassistant.utils.SPUtil;
 public class MainActivityPresenter {
     public static final int PRAISE_TYPE_ALL = 0;//朋友圈所有朋友
     public static final int PRAISE_TYPE_CONTACTS = 1;//通讯录指定朋友
-    private final Context ctx;
-    private TextView tv_start_time,tv_end_time;
-    public EditText et_friends1,et_friends2,et_friends3;
-    private RadioButton rb_all,rb_single;
+    public static Context ctx;
+    private TextView tv_start_time, tv_end_time;
+    public EditText et_friends1, et_friends2, et_friends3;
+    private RadioButton rb_all, rb_single;
     private RadioGroup rg;
-    private Switch sw_praise,sw_red_packet;
-    private Button test_all_praise,test_contacts_praise;
+    private Switch sw_praise, sw_red_packet;
+    private Button test_all_praise, test_contacts_praise;
     private TimePickerDialog timePickerDialog;
     public boolean isTime1;
-    private PendingIntent sender;
+    private static PendingIntent sender1;
+    private static PendingIntent sender2;
+
 
     public MainActivityPresenter(Context ctx) {
-        this.ctx=ctx;
+        this.ctx = ctx;
     }
 
 
-    public void initView(View v){
+    public void initView(View v) {
         test_all_praise = (Button) v.findViewById(R.id.test_all_praise);
         test_contacts_praise = (Button) v.findViewById(R.id.test_contacts_praise);
         sw_praise = (Switch) v.findViewById(R.id.sw_praise);
@@ -77,7 +81,7 @@ public class MainActivityPresenter {
     public void initListener(View.OnClickListener listener,
                              TextWatcher watcher,
                              RadioGroup.OnCheckedChangeListener rg_checkchangelistener,
-                             CompoundButton.OnCheckedChangeListener cb_checkchangelistener){
+                             CompoundButton.OnCheckedChangeListener cb_checkchangelistener) {
         test_all_praise.setOnClickListener(listener);
         test_contacts_praise.setOnClickListener(listener);
         tv_start_time.setOnClickListener(listener);
@@ -91,14 +95,14 @@ public class MainActivityPresenter {
     }
 
 
-    public void initData(){
+    public void initData() {
         et_friends1.setText(SPUtil.getString(Constants.name1, ""));
         et_friends2.setText(SPUtil.getString(Constants.name2, ""));
         et_friends3.setText(SPUtil.getString(Constants.name3, ""));
         String time1 = SPUtil.getString(Constants.end_time, "");
         if (!TextUtils.isEmpty(time1)) {
-           tv_end_time.setText(time1);
-            getPendingIntent(time1);
+            tv_end_time.setText(time1);
+            getMillonTime(time1);
         }
 
 
@@ -106,20 +110,25 @@ public class MainActivityPresenter {
         if (!TextUtils.isEmpty(time2)) {
             tv_start_time.setText(time2);
         }
-        rg.check(SPUtil.getBoolean(Constants.praise_all,false)?R.id.rb_all:R.id.rb_single);
-        sw_praise.setChecked(SPUtil.getBoolean(Constants.sw_praise,false));
-        sw_red_packet.setChecked(SPUtil.getBoolean(Constants.sw_red_packet,false));
+        rg.check(SPUtil.getBoolean(Constants.praise_all, false) ? R.id.rb_all : R.id.rb_single);
+        sw_praise.setChecked(SPUtil.getBoolean(Constants.sw_praise, false));
+        sw_red_packet.setChecked(SPUtil.getBoolean(Constants.sw_red_packet, false));
     }
 
-    public void getPendingIntent(String time){
-        Intent intent = new Intent(ctx, AlertReceiver.class);
-        sender = PendingIntent.getBroadcast(ctx, 22, intent, 0);
-        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    public static long getMillonTime(String time) {
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Calendar c = Calendar.getInstance();
         String format_time = formatter.format(c.getTime());
-        c.set(2008, 7, 8, 20, 0, 0);
-        c.set(Calendar.MILLISECOND, 0);
-//        return c.getTime().getTime();
+        format_time = format_time + " " + time;
+        formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        try {
+            Date date = formatter.parse(format_time);
+            c.setTime(date);
+            return c.getTimeInMillis();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     public String getFriendsName(int location) {
@@ -141,14 +150,16 @@ public class MainActivityPresenter {
 
     /**
      * 获取点赞类型:通讯录指定朋友  或  朋友圈所有朋友
+     *
      * @return
      */
     public int getPraiseType() {
-        return rb_single.isChecked()?PRAISE_TYPE_CONTACTS:PRAISE_TYPE_ALL;
+        return rb_single.isChecked() ? PRAISE_TYPE_CONTACTS : PRAISE_TYPE_ALL;
     }
 
     /**
      * 获取点赞开关状态
+     *
      * @return
      */
     public boolean getPraiseSwitchState() {
@@ -157,6 +168,7 @@ public class MainActivityPresenter {
 
     /**
      * 获取红包开关状态
+     *
      * @return
      */
     public boolean getRedPacketSwitchState() {
@@ -165,22 +177,26 @@ public class MainActivityPresenter {
 
     /**
      * 显示时间的对话框
+     *
      * @param istime1
      */
-    public void showTimeDialog(boolean istime1){
+    public void showTimeDialog(boolean istime1) {
         isTime1 = istime1;
         if (timePickerDialog == null) {
             timePickerDialog = new TimePickerDialog(ctx, new TimePickerDialog.OnTimeSetListener() {
                 @Override
                 public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                     if (isTime1) {
-                        String time1 = hourOfDay + ":" + (minute < 10 ? "0"+minute: minute+"");
+                        String time1 = hourOfDay + ":" + (minute < 10 ? "0" + minute : minute + "");
                         tv_start_time.setText(time1);
-                        SPUtil.put(ctx,Constants.start_time, time1);
+                        SPUtil.put(ctx, Constants.start_time, time1);
                     } else {
-                        String time2 = hourOfDay + ":" + (minute < 10 ? "0"+minute: minute+"");
+                        String time2 = hourOfDay + ":" + (minute < 10 ? "0" + minute : minute + "");
                         tv_end_time.setText(time2);
-                        SPUtil.put(ctx,Constants.end_time,time2);
+                        SPUtil.put(ctx, Constants.end_time, time2);
+                    }
+                    if (getPraiseSwitchState()) {
+                        openPraise();
                     }
                 }
             }, 8, 0, false);
@@ -190,6 +206,7 @@ public class MainActivityPresenter {
 
     /**
      * 网络连接检查
+     *
      * @return
      */
     public boolean checkIntentConnection() {
@@ -227,12 +244,13 @@ public class MainActivityPresenter {
 
     /**
      * 检查当前的AccessibleService是否开启
+     *
      * @return true 开启
      */
-    public  boolean checkServiceState(){
+    public boolean checkServiceState() {
         AccessibilityManager am = (AccessibilityManager) ctx.getSystemService(Context.ACCESSIBILITY_SERVICE);
         List<AccessibilityServiceInfo> serviceList = am.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_ALL_MASK);
-        for (AccessibilityServiceInfo info: serviceList) {
+        for (AccessibilityServiceInfo info : serviceList) {
             if (info.getId().contains(Constants.myPackageName)) {
                 return true;
             }
@@ -244,7 +262,7 @@ public class MainActivityPresenter {
     /**
      * 显示提示对话框
      */
-    public  void showTipsDialog() {
+    public void showTipsDialog() {
         new AlertDialog.Builder(ctx)
                 .setTitle("提示信息")
                 .setMessage("请到设置中心--辅助功能--无障碍--微信助手--打开设置。")
@@ -261,13 +279,13 @@ public class MainActivityPresenter {
     /**
      * 启动当前应用设置页面
      */
-    private  void startAppSettings() {
+    private void startAppSettings() {
         Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
 //        intent.setData(Uri.parse("package:" + ctx.getPackageName()));
         ctx.startActivity(intent);
     }
 
-    public  boolean prePareTest(){
+    public boolean prePareTest() {
         if (checkIntentConnection() && checkServiceState()) {
             return true;
         } else {
@@ -278,13 +296,46 @@ public class MainActivityPresenter {
     /**
      * 打开点赞功能
      */
-    public void openPraise(){
-        AlarmManager am = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
-//        am.set(AlarmManager.RTC_WAKEUP);
+    public void openPraise() {
+        String time1 =  SPUtil.getString(Constants.start_time, "");
+        String time2 =  SPUtil.getString(Constants.end_time, "");
+        creatAleram(time1, time2);
     }
 
-    public void stopPraise(){
+    /**
+     * 创建闹钟,最多写两个时间
+     * @param times
+     */
+    public static void  creatAleram(String...times){
         AlarmManager am = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
-        am.cancel(sender);
+        long aday = 24 * 60 * 60 * 1000;
+        for (int i = 0; i < times.length; i++) {
+            if (!TextUtils.isEmpty(times[i])) {
+                long longtime = getMillonTime(times[i]);
+                if (longtime < System.currentTimeMillis()) {
+                    longtime+= aday;
+                }
+                getPenddingIntent();
+                am.setExact(AlarmManager.RTC_WAKEUP,longtime,i==0?sender1:sender2);
+            }
+        }
+
     }
+
+    public void closePraise() {
+        AlarmManager am = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
+        if (sender1 != null) {
+            am.cancel(sender1);
+            am.cancel(sender2);
+        }
+    }
+
+    public static void getPenddingIntent() {
+        if (sender1 == null) {
+            Intent intent = new Intent(ctx, AlertReceiver.class);
+            sender1 = PendingIntent.getBroadcast(ctx, 888, intent, 0);
+            sender2 = PendingIntent.getBroadcast(ctx, 666, intent, 0);
+        }
+    }
+
 }

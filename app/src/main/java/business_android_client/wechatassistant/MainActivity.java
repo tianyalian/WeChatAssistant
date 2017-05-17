@@ -17,10 +17,11 @@ import business_android_client.wechatassistant.utils.SPUtil;
 
 public class MainActivity extends BaseActivity implements
         View.OnClickListener,
-        TextWatcher,RadioGroup.OnCheckedChangeListener,
+        TextWatcher, RadioGroup.OnCheckedChangeListener,
         CompoundButton.OnCheckedChangeListener {
 
-    /**http://www.cnblogs.com/bloglkl/p/5770279.html   时间日期选择器
+    /**
+     * http://www.cnblogs.com/bloglkl/p/5770279.html   时间日期选择器
      * 增加toolbar  修改baseactivity
      */
     public MainActivityPresenter presenter;
@@ -45,7 +46,7 @@ public class MainActivity extends BaseActivity implements
 
     @Override
     protected void initView() {
-        presenter.initListener(MainActivity.this,MainActivity.this,MainActivity.this,MainActivity.this);
+        presenter.initListener(MainActivity.this, MainActivity.this, MainActivity.this, MainActivity.this);
         getContentResolver().registerContentObserver(Uri.parse(Constants.back), false, observer);
     }
 
@@ -72,44 +73,64 @@ public class MainActivity extends BaseActivity implements
         }
     }
 
+    /**
+     * 点赞类型的监听
+     * @param group
+     * @param checkedId
+     */
     @Override
     public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
         switch (checkedId) {
             case R.id.rb_all:
-                SPUtil.put(ctx,Constants.praise_all,true);
+                SPUtil.put(ctx, Constants.praise_all, true);
                 break;
             case R.id.rb_single:
-                SPUtil.put(ctx,Constants.praise_all,false);
+                SPUtil.put(ctx, Constants.praise_all, false);
                 break;
         }
     }
 
+    /**
+     * 红包开关& 点赞开关的监听
+     * @param buttonView
+     * @param isChecked
+     */
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         switch (buttonView.getId()) {
             case R.id.sw_praise:
-                SPUtil.put(ctx,Constants.sw_praise,isChecked);
+                SPUtil.put(ctx, Constants.sw_praise, isChecked);
+                if (isChecked) {
+                    presenter.openPraise();
+                } else {
+                    presenter.closePraise();
+                }
                 break;
             case R.id.sw_red_packet:
-                SPUtil.put(ctx,Constants.sw_red_packet,isChecked);
+                SPUtil.put(ctx, Constants.sw_red_packet, isChecked);
+//                if (isChecked) {
+//                } else {
+//                }
                 break;
         }
     }
 
     @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    }
 
     @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {}
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+    }
 
     @Override
     public void afterTextChanged(Editable s) {
         String name = s.toString().trim();
         if (presenter.et_friends1.hasFocus()) {
             SPUtil.put(ctx, Constants.name1, name);
-        }else if (presenter.et_friends2.hasFocus()) {
+        } else if (presenter.et_friends2.hasFocus()) {
             SPUtil.put(ctx, Constants.name2, name);
-        }else if (presenter.et_friends3.hasFocus()) {
+        } else if (presenter.et_friends3.hasFocus()) {
             SPUtil.put(ctx, Constants.name3, name);
         }
     }
