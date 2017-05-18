@@ -29,12 +29,14 @@ public class Constants {
             end_time="endTime",
             start_time="start_time",
             praise_all="praiseAll",
+            wechatHome="的聊天",
             sw_red_packet="swRedPacket",
             sw_praise="swPraise",
+            imageButton="android.widget.ImageButton",
             back="content://backPress",
             myPackageName="business_android_client.wechatassistant",
             TAG = "WeChatService_TAG:";
     public static int pageTurningTime = 3;
-    public static String person = "Alien";
+    public static String person = "常占松";
 
 }

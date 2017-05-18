@@ -120,7 +120,10 @@ public class ShowHeartsPresenter extends BasePresenter {
 //                isContactsPage = true;
 //                priseAtNameInContacts(rootInActiveWindow);
 //            }
-            if (rootInActiveWindow.getChildCount()==8 && rootInActiveWindow.getChild(0).getChild(2).isVisibleToUser()){//当前为通讯录界面
+            if (rootInActiveWindow.getContentDescription()!=null
+                    && rootInActiveWindow.getContentDescription().toString().contains(Constants.wechatHome)
+                    && rootInActiveWindow.getChildCount()==8
+                    && rootInActiveWindow.getChild(0).getChild(2).isVisibleToUser()){//当前为通讯录界面
                 priseAtNameInContacts(rootInActiveWindow);
             }else if (rootInActiveWindow.getContentDescription().toString()!=null &&
                     rootInActiveWindow.getContentDescription().toString().contains(Constants.details)) {//当前详细资料页面
@@ -132,13 +135,12 @@ public class ShowHeartsPresenter extends BasePresenter {
             } else if ((rootInActiveWindow.findAccessibilityNodeInfosByText(Constants.comment) != null &&
                     rootInActiveWindow.findAccessibilityNodeInfosByText(Constants.comment).size() > 0)
                     ||Constants.detailPage.equals(rootInActiveWindow.getContentDescription().toString())) {//相册详情页
-                if (!clickText(rootInActiveWindow, Constants.praise, false)) {
+                if (!clickText(rootInActiveWindow, Constants.praise, false)) {//详情为照片
                     AccessibilityNodeInfo child = rootInActiveWindow.getChild(0).getChild(0);
-                    if ("android.widget.ImageButton".equals(child.getChild(5).getClassName())) {
+                    if (Constants.imageButton.equals(child.getChild(5).getClassName())) {//详情为连接
                         child.getChild(5).performAction(AccessibilityNodeInfo.ACTION_CLICK);
                     } else {
-                        child.getChild(6).performAction(AccessibilityNodeInfo.ACTION_CLICK);
-
+                        child.getChild(6).performAction(AccessibilityNodeInfo.ACTION_CLICK);//详情为一句话
                     }
                     clickText(rootInActiveWindow, Constants.praise, false);
                 }
