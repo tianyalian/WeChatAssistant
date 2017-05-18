@@ -35,6 +35,6 @@ public class Constants {
             myPackageName="business_android_client.wechatassistant",
             TAG = "WeChatService_TAG:";
     public static int pageTurningTime = 3;
-    public static String person = "红光";
+    public static String person = "Alien";
 
 }

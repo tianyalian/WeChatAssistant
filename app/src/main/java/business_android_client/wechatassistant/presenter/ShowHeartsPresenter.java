@@ -133,7 +133,13 @@ public class ShowHeartsPresenter extends BasePresenter {
                     rootInActiveWindow.findAccessibilityNodeInfosByText(Constants.comment).size() > 0)
                     ||Constants.detailPage.equals(rootInActiveWindow.getContentDescription().toString())) {//相册详情页
                 if (!clickText(rootInActiveWindow, Constants.praise, false)) {
-                    clickText(rootInActiveWindow, Constants.comment, false);
+                    AccessibilityNodeInfo child = rootInActiveWindow.getChild(0).getChild(0);
+                    if ("android.widget.ImageButton".equals(child.getChild(5).getClassName())) {
+                        child.getChild(5).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                    } else {
+                        child.getChild(6).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+
+                    }
                     clickText(rootInActiveWindow, Constants.praise, false);
                 }
                 isClickedPraise = true;
