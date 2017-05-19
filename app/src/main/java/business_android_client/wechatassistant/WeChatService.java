@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
@@ -22,22 +23,27 @@ import business_android_client.wechatassistant.utils.SPUtil;
 public class WeChatService extends AccessibilityService {
     public RedPacketPresenter redPacket;
     public ShowHeartsPresenter showHearts;
+    public String [] constacts;
+    int position = 0;
     public boolean  isNeedPrise = true, isContactsPage=false ,isClickedPraise=false;
     private ContentObserver observer = new ContentObserver(new Handler()) {
         @Override
         public void onChange(boolean selfChange, Uri uri) {
             super.onChange(selfChange, uri);
-            if (uri.toString().contains("click")) {
-                isNeedPrise = false;
-            } else if (uri.toString().contains("allfriends")) {
-                isAllPraise = true;
-            } else if(uri.toString().contains("contacts")){
-                isAllPraise = false;
+            if (uri.toString().contains("finsh_one_praise")) {//完成通讯录一次点赞
+                if (position < 3) {
+                    personName = constacts[position];
+                    position++;
+                } else {
+                    personName = "";
+                }
+
             }
         }
     };
     private AccessibilityNodeInfo rootInActiveWindow;
     public static boolean isAllPraise,isFirst = true;
+    String personName;
 
 
     /**
@@ -47,7 +53,6 @@ public class WeChatService extends AccessibilityService {
      */
     @Override
     public void onAccessibilityEvent(AccessibilityEvent accessibilityEvent) {
-//        if (isNeedPrise) {
         rootInActiveWindow = getRootInActiveWindow();
         if (isFirst) {
             isFirst = false;
@@ -56,7 +61,9 @@ public class WeChatService extends AccessibilityService {
             if (isAllPraise) {//朋友圈所有好友点赞
                 showHearts.praiseInFirendsCircle(rootInActiveWindow,WeChatService.this);
             } else {//通过通讯录给指定的人点赞
-                showHearts.praiseOneInContacts(rootInActiveWindow,WeChatService.this);
+                if (!TextUtils.isEmpty(personName)) {
+                 showHearts.praiseOneInContacts(rootInActiveWindow,WeChatService.this,personName);
+                }
             }
         }
     }
@@ -82,22 +89,31 @@ public class WeChatService extends AccessibilityService {
     /**
      * 初始化数据
      */
-    private void initData() {
+    private  synchronized void  initData() {
         if (redPacket == null) {
 //            redPacket = new RedPacketPresenter(WeChatService.this);
             showHearts = new ShowHeartsPresenter(WeChatService.this);
             Toast.makeText(WeChatService.this, "服务启动!", Toast.LENGTH_SHORT).show();
-//        showHearts.startMainActivity();
             isAllPraise = SPUtil.getBoolean(Constants.praise_all, false);
             showHearts.openWechat();
-//            getContentResolver().registerContentObserver(Uri.parse(Constants.notify), true, observer);
+            constacts = new String[3];
+            String string = SPUtil.getString(Constants.name1, "");
+            position = 0;
+            if (!TextUtils.isEmpty(string)) {
+                constacts[position] = string;
+                position++;
+            }
+             string = SPUtil.getString(Constants.name2, "");
+            if (!TextUtils.isEmpty(string)) {
+                constacts[position] = string;
+                position++;
+            }
+             string = SPUtil.getString(Constants.name3, "");
+            if (!TextUtils.isEmpty(string)) {
+                constacts[position] = string;
+            }
+                position=0;
         }
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        initData();
     }
 
     /**

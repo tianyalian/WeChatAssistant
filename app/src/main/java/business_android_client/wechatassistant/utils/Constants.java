@@ -37,9 +37,10 @@ public class Constants {
             sw_praise="swPraise",
             imageButton="android.widget.ImageButton",
             back="content://backPress",
+            finsh_one_praise = notify+"/finsh_one_praise",
             myPackageName="business_android_client.wechatassistant",
             TAG = "WeChatService_TAG:";
     public static int pageTurningTime = 3;
-    public static String person = "常占松";
+//    public static String person = "常占松";
 
 }

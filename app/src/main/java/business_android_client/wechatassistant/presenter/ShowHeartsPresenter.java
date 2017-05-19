@@ -78,9 +78,10 @@ public class ShowHeartsPresenter extends BasePresenter {
     /**
      * 查找通讯录并点击指定的人名
      * @param info
+     * @param personName
      */
-    public void priseAtNameInContacts(AccessibilityNodeInfo info){
-        scrollAndClick(Constants.person,300,info,false,Constants.new_friends);
+    public void priseAtNameInContacts(AccessibilityNodeInfo info, String personName){
+        scrollAndClick(personName,300,info,false,Constants.new_friends);
         sendNotify(false, Constants.uri_scroll);
     }
 
@@ -112,19 +113,20 @@ public class ShowHeartsPresenter extends BasePresenter {
     /**
      * 从通讯录界面开始,找到指定朋友,进入朋友圈相册页面,给第一条点赞
      * @param rootInActiveWindow
+     * @param personName
      */
-    public void praiseOneInContacts( AccessibilityNodeInfo rootInActiveWindow,AccessibilityService service){
+    public synchronized void praiseOneInContacts(AccessibilityNodeInfo rootInActiveWindow, AccessibilityService service, String personName){
         if (rootInActiveWindow != null && !isClickedPraise) {
 
             if (rootInActiveWindow.findAccessibilityNodeInfosByText("微信").size()>1
                     && rootInActiveWindow.getChildCount()==8
                     && rootInActiveWindow.getChild(0).getChild(2).isVisibleToUser()){//当前为通讯录界面
-                priseAtNameInContacts(rootInActiveWindow);
+                priseAtNameInContacts(rootInActiveWindow,personName);
             }else if (rootInActiveWindow.getContentDescription()!=null &&
                     rootInActiveWindow.getContentDescription().toString().contains(Constants.details)) {//当前详细资料页面
                 gotoPhoto(rootInActiveWindow);//跳转到个人相册
             } else if (rootInActiveWindow.getContentDescription()!=null &&
-                    rootInActiveWindow.getContentDescription().toString().contains(Constants.person)) {//相册列表
+                    rootInActiveWindow.getContentDescription().toString().contains(personName)) {//相册列表
                 List<AccessibilityNodeInfo> scrollableChildren = getScrollableChildren(rootInActiveWindow, true);
                 clickFirstPhoto(scrollableChildren);
             } else if ((rootInActiveWindow.findAccessibilityNodeInfosByText(Constants.comment) != null &&
@@ -142,7 +144,7 @@ public class ShowHeartsPresenter extends BasePresenter {
                     }
                     clickText(rootInActiveWindow, Constants.praise, false);
                 }
-                isClickedPraise = true;
+//                isClickedPraise = true;
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
@@ -157,10 +159,12 @@ public class ShowHeartsPresenter extends BasePresenter {
                     startMainActivity();
                     isDebug = false;
                 }
+                sendNotify(true, Constants.finsh_one_praise);
 
             } else if (rootInActiveWindow.getContentDescription()!=null &&
                  Constants.detailPage.equals(rootInActiveWindow.getContentDescription().toString())){//如果是朋友圈音乐  或者已经评论过的朋友圈详情
-                isClickedPraise = true;
+                sendNotify(true, Constants.finsh_one_praise);
+//                isClickedPraise = true;
             }
         }
     }
@@ -184,7 +188,7 @@ public class ShowHeartsPresenter extends BasePresenter {
     /**
      * 在朋友圈页面滚动 pageTurningTime次内的所有朋友点赞
      */
-    public void praiseInFirendsCircle(AccessibilityNodeInfo rootInActiveWindow,AccessibilityService service){
+    public synchronized void praiseInFirendsCircle(AccessibilityNodeInfo rootInActiveWindow,AccessibilityService service){
         if (count > 0) {
             if (rootInActiveWindow.getContentDescription() != null &&
                     rootInActiveWindow.getContentDescription().toString().equals(Constants.friendsCirclePage)) {//发现页面

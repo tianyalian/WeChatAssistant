@@ -250,6 +250,9 @@ public class MainActivityPresenter {
     public void testPraiseContact() {
         sendNotify(Constants.uri_contacts);
         if (prePareTest()) {
+            for (int i=1;i<4;i++) {
+                getFriendsName(i);
+            }
             openWechat();
         }
     }
@@ -289,7 +292,6 @@ public class MainActivityPresenter {
                         startAppSettings();
                     }
                 }).show();
-
     }
 
     /**
