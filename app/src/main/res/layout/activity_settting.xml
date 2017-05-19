@@ -62,6 +62,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@android:drawable/ic_delete"
+                android:visibility="gone"
                 />
         </LinearLayout>
 
@@ -134,7 +135,14 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
         </LinearLayout>
-
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="4dp"
+            android:text="@string/all_friends_praise_desc"
+            android:textColor="@color/gray_background"
+            android:textSize="12dp" />
         <LinearLayout
             style="@style/LinearLayoutAttr"
             android:gravity="center_vertical"
@@ -172,14 +180,7 @@
         </LinearLayout>
 
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:padding="4dp"
-            android:text="@string/all_friends_praise_desc"
-            android:textColor="@color/gray_background"
-            android:textSize="12dp" />
+
 
 
         <LinearLayout
@@ -224,12 +225,21 @@
 
             <Switch
                 android:id="@+id/sw_red_packet"
+                android:enabled="false"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
 
         </LinearLayout>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="4dp"
+            android:text="可以设置不同点赞类型,测试点赞"
+            android:textColor="@color/gray_background"
+            android:textSize="12dp" />
         <LinearLayout
             style="@style/LinearLayoutAttr"
             android:gravity="center_vertical"
@@ -248,13 +258,14 @@
                 android:paddingLeft="20dp"
                 android:background="@drawable/button_selecter"
                 android:paddingRight="20dp"
-                android:text="朋友圈测试" />
+                android:text="测试" />
 
             <Button
                 android:id="@+id/test_contacts_praise"
                 android:background="@drawable/button_selecter"
                 android:layout_width="wrap_content"
                 android:layout_marginLeft="5dp"
+                android:visibility="gone"
                 android:layout_height="35dp"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"

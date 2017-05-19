@@ -18,10 +18,11 @@ import business_android_client.wechatassistant.utils.Constants;
 
 public class ShowHeartsPresenter extends BasePresenter {
 
-    public boolean isFirst=true,isClickedPraise=false;
-    public int count;
+    public static  boolean isFirst=true;
+    public static int count;
 
     private AlertDialog.Builder builder;
+    public static boolean isDebug=false,isClickedPraise=false;
 
     public ShowHeartsPresenter(Context ctx) {
         super(ctx);
@@ -79,7 +80,7 @@ public class ShowHeartsPresenter extends BasePresenter {
      * @param info
      */
     public void priseAtNameInContacts(AccessibilityNodeInfo info){
-        scrollAndClick(Constants.person,800,info,false,Constants.new_friends);
+        scrollAndClick(Constants.person,300,info,false,Constants.new_friends);
         sendNotify(false, Constants.uri_scroll);
     }
 
@@ -115,51 +116,52 @@ public class ShowHeartsPresenter extends BasePresenter {
     public void praiseOneInContacts( AccessibilityNodeInfo rootInActiveWindow,AccessibilityService service){
         if (rootInActiveWindow != null && !isClickedPraise) {
 
-//            if (rootInActiveWindow.findAccessibilityNodeInfosByText(Constants.new_friends) != null &&
-//                    rootInActiveWindow.findAccessibilityNodeInfosByText(Constants.new_friends).size() > 0) {//当前为通讯录界面
-//                isContactsPage = true;
-//                priseAtNameInContacts(rootInActiveWindow);
-//            }
-            if (rootInActiveWindow.getContentDescription()!=null
-                    && rootInActiveWindow.getContentDescription().toString().contains(Constants.wechatHome)
+            if (rootInActiveWindow.findAccessibilityNodeInfosByText("微信").size()>1
                     && rootInActiveWindow.getChildCount()==8
                     && rootInActiveWindow.getChild(0).getChild(2).isVisibleToUser()){//当前为通讯录界面
                 priseAtNameInContacts(rootInActiveWindow);
-            }else if (rootInActiveWindow.getContentDescription().toString()!=null &&
+            }else if (rootInActiveWindow.getContentDescription()!=null &&
                     rootInActiveWindow.getContentDescription().toString().contains(Constants.details)) {//当前详细资料页面
                 gotoPhoto(rootInActiveWindow);//跳转到个人相册
-            } else if (rootInActiveWindow.getContentDescription().toString()!=null &&
+            } else if (rootInActiveWindow.getContentDescription()!=null &&
                     rootInActiveWindow.getContentDescription().toString().contains(Constants.person)) {//相册列表
                 List<AccessibilityNodeInfo> scrollableChildren = getScrollableChildren(rootInActiveWindow, true);
                 clickFirstPhoto(scrollableChildren);
             } else if ((rootInActiveWindow.findAccessibilityNodeInfosByText(Constants.comment) != null &&
                     rootInActiveWindow.findAccessibilityNodeInfosByText(Constants.comment).size() > 0)
-                    ||Constants.detailPage.equals(rootInActiveWindow.getContentDescription().toString())) {//相册详情页
+                    ||(rootInActiveWindow.getContentDescription()!=null &&
+                    Constants.detailPage.equals(rootInActiveWindow.getContentDescription().toString()))) {//相册详情页
                 if (!clickText(rootInActiveWindow, Constants.praise, false)) {//详情为照片
                     AccessibilityNodeInfo child = rootInActiveWindow.getChild(0).getChild(0);
-                    if (Constants.imageButton.equals(child.getChild(5).getClassName())) {//详情为连接
-                        child.getChild(5).performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                    } else {
-                        child.getChild(6).performAction(AccessibilityNodeInfo.ACTION_CLICK);//详情为一句话
+                    if (child != null) {//当前为照片,并且已经点过赞了
+                        if (Constants.imageButton.equals(child.getChild(5).getClassName())) {//详情为连接
+                            child.getChild(5).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                        } else {
+                            child.getChild(6).performAction(AccessibilityNodeInfo.ACTION_CLICK);//详情为一句话
+                        }
                     }
                     clickText(rootInActiveWindow, Constants.praise, false);
                 }
                 isClickedPraise = true;
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                clickText(rootInActiveWindow, Constants.backbutton, false);
                 performGloabEvent(service, AccessibilityService.GLOBAL_ACTION_BACK);
                 performGloabEvent(service, AccessibilityService.GLOBAL_ACTION_BACK);
                 performGloabEvent(service, AccessibilityService.GLOBAL_ACTION_BACK);
+                clickText(rootInActiveWindow, Constants.backbutton, false);
+                if (isDebug) {//返回mainActivity
+                    startMainActivity();
+                    isDebug = false;
+                }
 
-            } else if (Constants.detailPage.equals(rootInActiveWindow.getContentDescription().toString())){//如果是朋友圈音乐  或者已经评论过的朋友圈详情
-
+            } else if (rootInActiveWindow.getContentDescription()!=null &&
+                 Constants.detailPage.equals(rootInActiveWindow.getContentDescription().toString())){//如果是朋友圈音乐  或者已经评论过的朋友圈详情
                 isClickedPraise = true;
             }
-//            else {
-//                rootInActiveWindow.performAction(AccessibilityService.GLOBAL_ACTION_POWER_DIALOG);
-//                rootInActiveWindow.performAction(AccessibilityService.GLOBAL_ACTION_BACK);
-//            }
-//            else if (isContactsPage) {
-//                priseAtNameInContacts(rootInActiveWindow);
-//            }
         }
     }
 
@@ -202,13 +204,26 @@ public class ShowHeartsPresenter extends BasePresenter {
                     rootInActiveWindow.findAccessibilityNodeInfosByText(Constants.discover_text).size() > 0) {//微信
                 gotoDiscover(rootInActiveWindow);
                 gotoFriendsCircle(rootInActiveWindow);
+            } else {
+                openWechat();//如果当前不是微信主页面,并且界面有后退按钮,就一直返回
+                clickText(rootInActiveWindow, Constants.backbutton, false);
+                clickText(rootInActiveWindow, Constants.backbutton, false);
+                clickText(rootInActiveWindow, Constants.backbutton, false);
             }
 
         } else if (count==0){
+
             performGloabEvent(service,AccessibilityService.GLOBAL_ACTION_BACK);
             performGloabEvent(service,AccessibilityService.GLOBAL_ACTION_BACK);
-            performGloabEvent(service,AccessibilityService.GLOBAL_ACTION_HOME);
+//            performGloabEvent(service,AccessibilityService.GLOBAL_ACTION_HOME);
+            if (isDebug) {
+                startMainActivity();
+                isDebug = false;
+            }
             count--;
+        } else if (count == -1) {
+            openWechat();
+            startMainActivity();
         }
 
 

@@ -36,6 +36,7 @@ import java.util.List;
 
 import business_android_client.wechatassistant.AlertReceiver;
 import business_android_client.wechatassistant.R;
+import business_android_client.wechatassistant.WeChatService;
 import business_android_client.wechatassistant.utils.Constants;
 import business_android_client.wechatassistant.utils.SPUtil;
 
@@ -109,6 +110,7 @@ public class MainActivityPresenter {
         String time1 = SPUtil.getString(Constants.end_time, "");
         if (!TextUtils.isEmpty(time1)) {
             tv_end_time.setText(time1);
+            iv_del.setVisibility(View.VISIBLE);
             getMillonTime(time1);
         }
 
@@ -200,6 +202,7 @@ public class MainActivityPresenter {
                     } else {
                         String time2 = hourOfDay + ":" + (minute < 10 ? "0" + minute : minute + "");
                         tv_end_time.setText(time2);
+                        iv_del.setVisibility(View.VISIBLE);
                         SPUtil.put(ctx, Constants.end_time, time2);
                     }
                     if (getPraiseSwitchState()) {
@@ -299,6 +302,9 @@ public class MainActivityPresenter {
     }
 
     public boolean prePareTest() {
+        ShowHeartsPresenter.isDebug=true;
+        WeChatService.isFirst=true;
+        ShowHeartsPresenter.isFirst = true;
         if (checkIntentConnection() && checkServiceState()) {
             return true;
         } else {
@@ -359,6 +365,7 @@ public class MainActivityPresenter {
         if (!tv_end_time.getText().toString().contains("时间")) {
             SPUtil.put(ctx, Constants.end_time, "");
             tv_end_time.setText("时间② ▼");
+            iv_del.setVisibility(View.GONE);
             closePraise(true);
         }
     }

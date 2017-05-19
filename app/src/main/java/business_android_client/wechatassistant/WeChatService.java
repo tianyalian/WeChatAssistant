@@ -22,7 +22,7 @@ import business_android_client.wechatassistant.utils.SPUtil;
 public class WeChatService extends AccessibilityService {
     public RedPacketPresenter redPacket;
     public ShowHeartsPresenter showHearts;
-    public boolean isFirst = true, isNeedPrise = true, isContactsPage=false ,isClickedPraise=false;
+    public boolean  isNeedPrise = true, isContactsPage=false ,isClickedPraise=false;
     private ContentObserver observer = new ContentObserver(new Handler()) {
         @Override
         public void onChange(boolean selfChange, Uri uri) {
@@ -37,7 +37,7 @@ public class WeChatService extends AccessibilityService {
         }
     };
     private AccessibilityNodeInfo rootInActiveWindow;
-    private boolean isAllPraise;
+    public static boolean isAllPraise,isFirst = true;
 
 
     /**
@@ -59,12 +59,6 @@ public class WeChatService extends AccessibilityService {
                 showHearts.praiseOneInContacts(rootInActiveWindow,WeChatService.this);
             }
         }
-//        getContentResolver().notifyChange(Uri.parse(Constants.back),null);
-
-//        performGlobalAction(AccessibilityService.GLOBAL_ACTION_HOME);
-//        performGlobalAction(AccessibilityService.GLOBAL_ACTION_RECENTS);
-//        performGlobalAction(AccessibilityService.GLOBAL_ACTION_TOGGLE_SPLIT_SCREEN);
-
     }
 
     /**
@@ -90,11 +84,11 @@ public class WeChatService extends AccessibilityService {
      */
     private void initData() {
         if (redPacket == null) {
-            redPacket = new RedPacketPresenter(WeChatService.this);
+//            redPacket = new RedPacketPresenter(WeChatService.this);
             showHearts = new ShowHeartsPresenter(WeChatService.this);
             Toast.makeText(WeChatService.this, "服务启动!", Toast.LENGTH_SHORT).show();
 //        showHearts.startMainActivity();
-            isAllPraise = SPUtil.getBoolean(Constants.praise, false);
+            isAllPraise = SPUtil.getBoolean(Constants.praise_all, false);
             showHearts.openWechat();
 //            getContentResolver().registerContentObserver(Uri.parse(Constants.notify), true, observer);
         }

@@ -100,17 +100,6 @@ public class BasePresenter {
                 sendNotify(isNeedNotify,Constants.uri_click);
                 return true;
             } else {
-//                AccessibilityNodeInfo parent = info.getParent();
-//                if (parent.isClickable()) {
-//                    parent.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-//                    sendNotify(isNeedNotify,Constants.uri_click);
-//                    return true;
-//                } else {
-//                    parent.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
-//                    sendNotify(isNeedNotify,Constants.uri_click);
-//                    return true;
-//                }
-
                 performClick(info.getParent());
             }
         }
@@ -148,19 +137,15 @@ public class BasePresenter {
                                final AccessibilityNodeInfo nodeInfo,
                                final boolean isNeedNotify,
                                final String keywords) {
-//        if (runnable == null) {
-//            runnable = new Runnable() {
-//                @Override
-//                public void run() {
-                     scrollscreen(nodeInfo, keywords);
-                    clickText(nodeInfo, text, isNeedNotify);
-//                }
-//            };
-//        }
-//        handler.postDelayed(runnable, frequency);
+
+                             scrollscreen(nodeInfo, keywords);
+                            try {
+                                Thread.sleep(frequency);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+        clickText(nodeInfo, text, isNeedNotify);
         bean = new PraiseBean(text, frequency, nodeInfo, isNeedNotify, keywords);
-//        handler.sendEmptyMessageDelayed(0,frequency);
-//        sendNotify(true, Constants.uri_scroll);
     }
 
 
