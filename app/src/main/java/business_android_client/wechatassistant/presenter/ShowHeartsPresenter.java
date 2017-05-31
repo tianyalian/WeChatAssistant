@@ -19,14 +19,16 @@ import business_android_client.wechatassistant.utils.Constants;
 public class ShowHeartsPresenter extends BasePresenter {
 
     public static  boolean isFirst=true;
-    public static int count;
+    public static int count;//标记朋友圈点赞执行步骤
 
     private AlertDialog.Builder builder;
     public static boolean isDebug=false,isClickedPraise=false;
+    private boolean NeedBackTop=true;
+    private boolean NeedBackHome=true;
 
     public ShowHeartsPresenter(Context ctx) {
         super(ctx);
-        count = Constants.pageTurningTime;
+        count = -3;
     }
 
     /**
@@ -117,10 +119,30 @@ public class ShowHeartsPresenter extends BasePresenter {
      */
     public synchronized void praiseOneInContacts(AccessibilityNodeInfo rootInActiveWindow, AccessibilityService service, String personName){
         if (rootInActiveWindow != null && !isClickedPraise) {
+            if (NeedBackHome) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                NeedBackHome =clickText(rootInActiveWindow, Constants.backbutton, false);
+//                performGloabEvent(service, AccessibilityService.GLOBAL_ACTION_BACK);
+//                performGloabEvent(service, AccessibilityService.GLOBAL_ACTION_BACK);
+//                performGloabEvent(service, AccessibilityService.GLOBAL_ACTION_BACK);
+            }
 
             if (rootInActiveWindow.findAccessibilityNodeInfosByText("微信").size()>1
                     && rootInActiveWindow.getChildCount()==8
                     && rootInActiveWindow.getChild(0).getChild(2).isVisibleToUser()){//当前为通讯录界面
+                if (NeedBackTop) {
+                    NeedBackTop=false;
+                    scrollTop(rootInActiveWindow, "微信");
+                }
+
+                List<AccessibilityNodeInfo> infos = rootInActiveWindow.findAccessibilityNodeInfosByText("位联系人");
+                if (infos.size() > 0 && infos.get(0).isVisibleToUser()) {//已经滚动到最底部了,就返回顶部
+                    NeedBackTop=true;
+                }
                 priseAtNameInContacts(rootInActiveWindow,personName);
             }else if (rootInActiveWindow.getContentDescription()!=null &&
                     rootInActiveWindow.getContentDescription().toString().contains(Constants.details)) {//当前详细资料页面
@@ -145,26 +167,22 @@ public class ShowHeartsPresenter extends BasePresenter {
                     clickText(rootInActiveWindow, Constants.praise, false);
                 }
 //                isClickedPraise = true;
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                clickText(rootInActiveWindow, Constants.backbutton, false);
-                performGloabEvent(service, AccessibilityService.GLOBAL_ACTION_BACK);
-                performGloabEvent(service, AccessibilityService.GLOBAL_ACTION_BACK);
-                performGloabEvent(service, AccessibilityService.GLOBAL_ACTION_BACK);
-                clickText(rootInActiveWindow, Constants.backbutton, false);
-                if (isDebug) {//返回mainActivity
-                    startMainActivity();
-                    isDebug = false;
-                }
+                NeedBackTop=true;
+                NeedBackHome = true;
+//                if (isDebug) {//返回mainActivity
+//                    startMainActivity();
+//                    isDebug = false;
+//                    isClickedPraise=true;
+//                }
                 sendNotify(true, Constants.finsh_one_praise);
 
             } else if (rootInActiveWindow.getContentDescription()!=null &&
                  Constants.detailPage.equals(rootInActiveWindow.getContentDescription().toString())){//如果是朋友圈音乐  或者已经评论过的朋友圈详情
                 sendNotify(true, Constants.finsh_one_praise);
-//                isClickedPraise = true;
+               NeedBackTop=true;
+            }else{
+                performGloabEvent(service,AccessibilityService.GLOBAL_ACTION_BACK);
+                performGloabEvent(service,AccessibilityService.GLOBAL_ACTION_BACK);
             }
         }
     }
@@ -233,12 +251,13 @@ public class ShowHeartsPresenter extends BasePresenter {
             count--;
             openWechat();
             startMainActivity();
-        }else {
+        }else if(count==-2){
             startMainActivity();
         }
 
 
     }
+
 
 
 }

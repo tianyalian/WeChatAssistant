@@ -238,6 +238,7 @@ public class MainActivityPresenter {
      * 朋友圈点赞测试
      */
     public void testPraiseAll() {
+        ShowHeartsPresenter.count = Constants.pageTurningTime;//朋友圈点赞翻页初始化
         sendNotify(Constants.uri_allPraise);
         if (prePareTest()) {
             openWechat();
@@ -249,10 +250,12 @@ public class MainActivityPresenter {
      */
     public void testPraiseContact() {
         sendNotify(Constants.uri_contacts);
+        WeChatService.isRefreshName=true;//获取名单
+        ShowHeartsPresenter.isClickedPraise = false;
         if (prePareTest()) {
-            for (int i=1;i<4;i++) {
-                getFriendsName(i);
-            }
+//            for (int i=1;i<4;i++) {
+//                getFriendsName(i);
+//            }
             openWechat();
         }
     }

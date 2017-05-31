@@ -23,21 +23,26 @@ import business_android_client.wechatassistant.utils.SPUtil;
 public class WeChatService extends AccessibilityService {
     public RedPacketPresenter redPacket;
     public ShowHeartsPresenter showHearts;
-    public String [] constacts;
-    int position = 0;
-    public boolean  isNeedPrise = true, isContactsPage=false ,isClickedPraise=false;
+    public String [] constacts;//被点赞的联系人名单
+    int position = 0;////被点赞的联系人名单  position位置
+    public static boolean isRefreshName = false;//是否开启初始获取联系人点赞的开关
+    public boolean   isContactsPage=false ,isClickedPraise=false;
     private ContentObserver observer = new ContentObserver(new Handler()) {
         @Override
         public void onChange(boolean selfChange, Uri uri) {
             super.onChange(selfChange, uri);
             if (uri.toString().contains("finsh_one_praise")) {//完成通讯录一次点赞
-                if (position < 3) {
-                    personName = constacts[position];
+                if (position < 2) {
                     position++;
+                    personName = constacts[position];
                 } else {
                     personName = "";
                 }
-
+                if (TextUtils.isEmpty(personName)) {
+                    ShowHeartsPresenter.isClickedPraise = true;
+                } else {
+                    ShowHeartsPresenter.isClickedPraise = false;
+                }
             }
         }
     };
@@ -61,6 +66,10 @@ public class WeChatService extends AccessibilityService {
             if (isAllPraise) {//朋友圈所有好友点赞
                 showHearts.praiseInFirendsCircle(rootInActiveWindow,WeChatService.this);
             } else {//通过通讯录给指定的人点赞
+                if (isRefreshName) {
+                    isRefreshName = false;
+                    initName();
+                }
                 if (!TextUtils.isEmpty(personName)) {
                  showHearts.praiseOneInContacts(rootInActiveWindow,WeChatService.this,personName);
                 }
@@ -97,23 +106,29 @@ public class WeChatService extends AccessibilityService {
             isAllPraise = SPUtil.getBoolean(Constants.praise_all, false);
             showHearts.openWechat();
             constacts = new String[3];
-            String string = SPUtil.getString(Constants.name1, "");
-            position = 0;
-            if (!TextUtils.isEmpty(string)) {
-                constacts[position] = string;
-                position++;
-            }
-             string = SPUtil.getString(Constants.name2, "");
-            if (!TextUtils.isEmpty(string)) {
-                constacts[position] = string;
-                position++;
-            }
-             string = SPUtil.getString(Constants.name3, "");
-            if (!TextUtils.isEmpty(string)) {
-                constacts[position] = string;
-            }
-                position=0;
+            initName();
         }
+    }
+
+    //获取sp中的名单
+    private void initName() {
+        String string = SPUtil.getString(Constants.name1, "");
+        position = 0;
+        if (!TextUtils.isEmpty(string)) {
+            constacts[position] = string;
+            position++;
+        }
+        string = SPUtil.getString(Constants.name2, "");
+        if (!TextUtils.isEmpty(string)) {
+            constacts[position] = string;
+            position++;
+        }
+        string = SPUtil.getString(Constants.name3, "");
+        if (!TextUtils.isEmpty(string)) {
+            constacts[position] = string;
+        }
+        personName = constacts[0];
+        position=0;
     }
 
     /**

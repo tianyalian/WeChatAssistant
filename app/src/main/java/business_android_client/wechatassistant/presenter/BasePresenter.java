@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.ContentObserver;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
@@ -271,6 +272,24 @@ public class BasePresenter {
                 e.printStackTrace();
             }
             service.performGlobalAction(action);
+        }
+    }
+
+    /**
+     *  双击微信 ToolBar 列表滚动返回
+     */
+    public void scrollTop(AccessibilityNodeInfo nodeInfo,String text) {
+        List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText("微信");
+        Rect rect = new Rect();
+        if (list != null && list.size() > 0) {
+            for (AccessibilityNodeInfo info: list) {
+                info.getBoundsInScreen(rect);
+                if (rect.top< 150) {//在720*1280手机上,左上角的"微信"boundinScreen 为Rect(28, 67 - 100, 116)
+                    performClick(info);
+                    performClick(info);
+                    return;
+                }
+            }
         }
     }
 }

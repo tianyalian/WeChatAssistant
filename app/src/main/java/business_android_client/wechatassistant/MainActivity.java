@@ -12,7 +12,6 @@ import android.widget.RadioGroup;
 
 import business_android_client.wechatassistant.base.BaseActivity;
 import business_android_client.wechatassistant.presenter.MainActivityPresenter;
-import business_android_client.wechatassistant.presenter.ShowHeartsPresenter;
 import business_android_client.wechatassistant.utils.Constants;
 import business_android_client.wechatassistant.utils.SPUtil;
 
@@ -139,12 +138,5 @@ public class MainActivity extends BaseActivity implements
         } else if (presenter.et_friends3.hasFocus()) {
             SPUtil.put(ctx, Constants.name3, name);
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        ShowHeartsPresenter.isClickedPraise = false;
-        ShowHeartsPresenter.count = Constants.pageTurningTime;
     }
 }
