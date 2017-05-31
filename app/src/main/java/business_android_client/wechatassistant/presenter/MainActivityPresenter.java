@@ -239,6 +239,8 @@ public class MainActivityPresenter {
      */
     public void testPraiseAll() {
         ShowHeartsPresenter.count = Constants.pageTurningTime;//朋友圈点赞翻页初始化
+        WeChatService.isRefreshName=true;//获取名单
+        ShowHeartsPresenter.isClickedPraise = false;
         sendNotify(Constants.uri_allPraise);
         if (prePareTest()) {
             openWechat();
