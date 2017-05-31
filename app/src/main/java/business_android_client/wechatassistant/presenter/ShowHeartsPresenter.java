@@ -190,6 +190,10 @@ public class ShowHeartsPresenter extends BasePresenter {
      */
     public synchronized void praiseInFirendsCircle(AccessibilityNodeInfo rootInActiveWindow,AccessibilityService service){
         if (count > 0) {
+            if (rootInActiveWindow==null) {
+                return;
+            }
+
             if (rootInActiveWindow.getContentDescription() != null &&
                     rootInActiveWindow.getContentDescription().toString().equals(Constants.friendsCirclePage)) {//发现页面
                 List<AccessibilityNodeInfo> scrollableChildren = getScrollableChildren(rootInActiveWindow, true);
@@ -226,7 +230,10 @@ public class ShowHeartsPresenter extends BasePresenter {
             }
             count--;
         } else if (count == -1) {
+            count--;
             openWechat();
+            startMainActivity();
+        }else {
             startMainActivity();
         }
 
