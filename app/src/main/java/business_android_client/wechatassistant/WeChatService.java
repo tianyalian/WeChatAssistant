@@ -104,6 +104,9 @@ public class WeChatService extends AccessibilityService {
             showHearts = new ShowHeartsPresenter(WeChatService.this);
             Toast.makeText(WeChatService.this, "服务启动!", Toast.LENGTH_SHORT).show();
             isAllPraise = SPUtil.getBoolean(Constants.praise_all, false);
+            if(isAllPraise) {
+                showHearts.count = 3;
+            }
             showHearts.openWechat();
             constacts = new String[3];
             initName();
