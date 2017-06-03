@@ -125,10 +125,8 @@ public class ShowHeartsPresenter extends BasePresenter {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                NeedBackHome =clickText(rootInActiveWindow, Constants.backbutton, false);
-//                performGloabEvent(service, AccessibilityService.GLOBAL_ACTION_BACK);
-//                performGloabEvent(service, AccessibilityService.GLOBAL_ACTION_BACK);
-//                performGloabEvent(service, AccessibilityService.GLOBAL_ACTION_BACK);
+
+//                isClickedPraise = true;
             }
 
             if (rootInActiveWindow.findAccessibilityNodeInfosByText("微信").size()>1
@@ -169,15 +167,18 @@ public class ShowHeartsPresenter extends BasePresenter {
 //                isClickedPraise = true;
                 NeedBackTop=true;
                 NeedBackHome = true;
-//                if (isDebug) {//返回mainActivity
-//                    startMainActivity();
-//                    isDebug = false;
-//                    isClickedPraise=true;
-//                }
+                NeedBackHome =clickText(rootInActiveWindow, Constants.backbutton, false);
+                performGloabEvent(service, AccessibilityService.GLOBAL_ACTION_BACK);
+                performGloabEvent(service, AccessibilityService.GLOBAL_ACTION_BACK);
+                performGloabEvent(service, AccessibilityService.GLOBAL_ACTION_BACK);
                 sendNotify(true, Constants.finsh_one_praise);
 
             } else if (rootInActiveWindow.getContentDescription()!=null &&
                  Constants.detailPage.equals(rootInActiveWindow.getContentDescription().toString())){//如果是朋友圈音乐  或者已经评论过的朋友圈详情
+                NeedBackHome =clickText(rootInActiveWindow, Constants.backbutton, false);
+                performGloabEvent(service, AccessibilityService.GLOBAL_ACTION_BACK);
+                performGloabEvent(service, AccessibilityService.GLOBAL_ACTION_BACK);
+                performGloabEvent(service, AccessibilityService.GLOBAL_ACTION_BACK);
                 sendNotify(true, Constants.finsh_one_praise);
                NeedBackTop=true;
             }else{
